@@ -4,15 +4,20 @@ import Agent
 import time
 
 map1=Map.Map()
-AgentsList=[]
-for i in range(0,3):
-    AgentsList.append(Agent.Agent(map1))
+
+pop1=Population.Population(map1,8)    
 
 
-for agnt in AgentsList:
 ##    print(agnt.position)
     
-    for i in range(0,50):
+for i in range(0,50):
+    for agnt in pop1.Members:
+        agnt.move(random.randint(-1,1),random.randint(-1,1))
+        pop1.spawn(agnt)
+        map1.drawMap(pop1.Members)
+        print("")
+        
+        
 ##        a = random.randint(-1,1)
 ##        b = random.randint(-1,1)
 ##        print("Position before move:")
@@ -23,7 +28,7 @@ for agnt in AgentsList:
 ##        print("Position after move:")
 ##        print(agnt.position)
 
-        
+      
         agnt.move(random.randint(-1,1),random.randint(-1,1))       
         map1.drawMap(AgentsList)
         print("")
