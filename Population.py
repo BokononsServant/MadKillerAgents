@@ -12,7 +12,7 @@ class Population():
     def die (self, agnt):        
         self.Members.remove(agnt)
     def spawn(self,agnt):
-        if random.randrange(0,1,0.01)<agnt.reproRate:         
+        if random.randrange(0,100)<agnt.reproRate:         
             self.Members.append(Agent.Child(agnt))
             agnt.move
 

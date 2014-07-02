@@ -4,7 +4,7 @@ class Agent:
     def __init__(self, map):
         self.strength = random.gauss(0,1)
         self.position = [random.randint(0,map.dimension-1),random.randint(0,map.dimension-1)]
-        self.reproRate = 0.02
+        self.reproRate = 2
         self.health = 100
         self.assignedMap = map
         global idnt        
@@ -18,7 +18,6 @@ class Agent:
             self.color = "red"
             
     def move(self, horizontal, vertical):
-        print("Parent Movement: ",horizontal, " ", vertical)
         self.position= [self.position[0]+horizontal,self.position[1]+vertical]
 ##        self.position[0] = self.position[0]+horizontal
 ##        self.position[1] = self.position[1]+vertical
@@ -33,6 +32,7 @@ class Agent:
             self.position[1] = self.position[1] - 2*abs(vertical)  
 
 class Child(Agent):
+    Agent.__init__(self, self.assignedMap)
     def __init__(self, prnt):    
         self.color=prnt.color
         self.strength=random.gauss(prnt.strength,1)
