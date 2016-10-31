@@ -1,35 +1,35 @@
-import pygame
-from pygame.locals import *
 
-def main():
-    # Initialise screen
-    pygame.init()
-    screen = pygame.display.set_mode((500, 500))
-    pygame.display.set_caption('Basic Pygame program')
+from Tkinter import *
 
-    # Fill background
-    background = pygame.Surface(screen.get_size())
-    background = background.convert()
-    background.fill((250, 250, 250))
+class MyApp:
+    def __init__(self, parent):
+        self.myParent = parent  ### (7) remember my parent, the root
+        self.myContainer1 = Frame(parent)
+        self.myContainer1.pack()
 
-    # Display some text
-    font = pygame.font.Font(None, 24)
-    text = font.render("Hello There", 1, (10, 10, 10))
-    background.blit(text, (0,0))    
+        self.button1 = Button(self.myContainer1)
+        self.button1.configure(text="OK", background= "green")
+        self.button1.pack(side=LEFT)
+        self.button1.focus_force()
+        self.button1.bind("<Button-1>", self.button1Click) ### (1)
+        self.button1.bind("<Return>", self.button1Click)
 
-    # Blit everything to the screen
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
+        self.button2 = Button(self.myContainer1)
+        self.button2.configure(text="Cancel", background="red")
+        self.button2.pack(side=RIGHT)
+        self.button2.bind("<Button-1>", self.button2Click) ### (2)
+        self.button2.bind("<Return>", self.button2Click)
+        
+    def button1Click(self, event):    ### (3)
+        if self.button1["background"] == "green": ### (4)
+            self.button1["background"] = "yellow"
+        else:
+            self.button1["background"] = "green"
 
-
-    # Event loop
-    while 1:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                return
-
-        screen.blit(background, (0, 0))
-        pygame.display.flip()
+    def button2Click(self, event):  ### (5)
+        self.myParent.destroy()     ### (6)
 
 
-if __name__ == '__main__': main()
+root = Tk()
+myapp = MyApp(root)
+root.mainloop()
