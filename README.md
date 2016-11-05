@@ -13,9 +13,9 @@ The size of the map is user defined and stored as an n x m array. Each array ele
 ## Terrain
 
 Each Tile has a tile value (TV) between 1 and 6. This affects movement and attack/defense
-	**1 acts as a road and allows units to move at 0.5 movement cost
-	**6 acts as Mountain and makes tile impassable
-	**In combat the tile yield acts as "armor" when calculating losses
+  **1 acts as a road and allows units to move at 0.5 movement cost
+  **6 acts as Mountain and makes tile impassable
+  **In combat the tile yield acts as "armor" when calculating losses
 
 ## Movement
 
@@ -31,11 +31,11 @@ If one of the armies is much greater (20x) then the other, then it looses no uni
 
 Armies automatically grows with each added unit.
 At certain size intervals more actions become possible:
-	**decrease/ increase tile yield
-	**Forced march: loose 10% Unit strength per TV over 1 to make the tile 0.5 movement cost. 
-	**If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
-	**build city
-	**grow city
+  **decrease/ increase tile yield
+  **Forced march: loose 10% Unit strength per TV over 1 to make the tile 0.5 movement cost. 
+  **If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
+  **build city
+  **grow city
 	
 ## Cities
 
