@@ -42,5 +42,9 @@ At certain size intervals more actions become possible:
 Cities can be founded by stacks of a certain size. They start at size 1 and work the tile they are founded on and as many tiles as their population is. They produce units continually. For each TV they produce one unit per turn. A city grows in size if you spend X units. Each population is more expensive then the last one. Minimum distance between two cities is 2 tiles. 
 
 ## User Interface
-	
+
+
+## AI Strategies
+
+Pillager: Prioritiezes downgrading tiles
 	
