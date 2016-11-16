@@ -75,7 +75,7 @@ TV are assigned in subsequent passes, in descending order (6s gets assigned firs
 * 5th pass: very low probability if no 3 is adjacent to the tile. Otherwise 50% probability for 2
 * Rest gets filled with 1
 
-
+![Map](https://gitlab.jaapen.com/gabriel/MadKillerAgents/src/ExampleMap/ExampleMap.png)
 
 
 ### Weighted random
