@@ -79,8 +79,6 @@ Example:
 
 ![Map](src/ExampleMap/ExampleMap.png?raw=true)
 
-
-
 ### Weighted random
 
 Tile values are assigned randomly but weighted, 6s are rare, 1s common. 
