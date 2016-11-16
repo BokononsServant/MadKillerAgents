@@ -1,6 +1,5 @@
-
-moves1=[[-1,0],[1,0],[0,1],[0,-1]]
-
-moves2=[[3,3],[4,4]]
-
-print moves1[0][0]+moves2[1][0]
+class Test(self):
+    i=5
+    self.i=6
+    
+    

@@ -1,6 +1,6 @@
 # Mad Killer Agents
 
-## Map 
+## Map
 
 The size of the map is user defined and stored as an n x m array. Each array element contains another one dimensional array with all the contents of the file:
 
@@ -33,6 +33,10 @@ If one of the armies is much bigger (20x) then the other, then it looses no unit
 
 If the attacker wins he moves onto the tile.
 
+### Combat Tactics
+
+* As the TV gets added to Army strength it is beneficial to split Armys up prior to attacking/ defending to get more of that bonus. An army of 10 on a TV-5 acts like an army of 15, two armies of 5 on tow TV-5 act like 20 units.
+
 ## Armies
 
 Armies automatically grow with each added unit.
@@ -43,6 +47,7 @@ At certain size intervals more actions become possible. These actions consume un
 *  If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
 *  build city
 *  grow city
+* Discover Technology
 	
 ## Cities
 
@@ -53,5 +58,51 @@ Cities can be founded by stacks of a certain size. They start at size 1 and work
 
 ## AI Strategies
 
-Pillager: Prioritizes downgrading tiles
+* Pillager: Prioritizes downgrading tiles
+* Barbarian: Does not found a city with its starting units and goes looking for the other players to attack.  Only viable when more than 2 players are in the game. Splits its army up according to number of other players and attacks each player only once.
+
+## Map Generation
+
+### Mountains
+
+TV should be interpreted as elevation, 6 are impassable mountaintops, 1 are valleys. To get a somewhat realistic map, map generation should work like this:
+
+TV are assigned in subsequent passes, in descending order (6s gets assigned first etc.). Every unassigned tile of the map gets looked at per pass.
+* 1st pass: Low probability for 6, these are the mountaintops
+* 2nd pass: very low probability for 5 if no 6 is adjacent to the tile (This would create a new, lower mountain with height 5). Otherwise 50% probability for 5, thus creating the plateau of 5s below the mountaintop of 6.
+* 3d pass: very low probability if no 5 is adjacent to the tile. Otherwise 50% probability for 4 
+* 4th pass: very low probability if no 4 is adjacent to the tile. Otherwise 50% probability for 3
+* 5th pass: very low probability if no 3 is adjacent to the tile. Otherwise 50% probability for 2
+* Rest gets filled with 1
+
+
+
+
+### Weighted random
+
+Tile values are assigned randomly but weighted, 6s are rare, 1s common. 
+
+### Random
+
+Tile values are assigned randomly
+
+### Plateaus
+
+Like Mountains but one TV is excluded. If there are no 4s, clusters of 6s and 5s will be generated, but then there is only a very low probability for further 3s and 2s, because there are no 4s to boost the probability of these tiles. 
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
 	
