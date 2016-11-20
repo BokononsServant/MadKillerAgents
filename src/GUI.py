@@ -17,22 +17,15 @@ class MyApp:
         self.button1.configure(text="OK", background= "green")
         self.button1.pack(side=LEFT)
         self.button1.focus_force()                
-
-        self.x=40
-        self.y =40
         
-        self.p=PhotoImage()
-        self.dimX=20
-        self.dimY=20
-
-        self.k=0
-        self.map=[[0 for i in range(self.dimY)] for i in range(self.dimX)]
+        self.MapGeneration(20,20) # Args are dimensions of the map 
         
-        for i in range(self.dimX):
-            for j in range(self.dimY):
-                #self.map[i][j]=(Label(self.myContainer2,bg="red",relief='solid',image=self.p,height=self.y, compound='left',width=self.x,text=str(i)+" "+str(j)))
-                self.map[i][j]=(Label(self.myContainer2,relief='solid',image=self.p,height=self.y, compound='left',width=self.x,text=" "))
-                self.map[i][j].grid(row=self.dimY-j,column=i)          
+        Armies = []
+        Cities = []
+        
+        
+        
+                        
 
         #self.moves=[[-1,0],[1,0],[0,1],[0,-1]]
         #self.pos=[random.randint(0,self.dimX-1),random.randint(0,self.dimY-1)]                
@@ -40,38 +33,46 @@ class MyApp:
         
         #print self.pos         
         
-        self.MapGeneration()
+             
 
-        
-        
-            
-        
         #for i in range(100):         
             #self.myContainer2.after(i*400,self.RandomMove)  
             #self.myContainer1.after(200,self.RandomMove)
             
             #self.delay
             
-    def MapGeneration(self):        
+    def MapGeneration(self,dimX,dimY):  
+        
+        self.p=PhotoImage() # empty image needed for proper scaling of the tiles
+        
+        self.TileWidth=40 
+        self.TileHeight =40 
+        
+        self.map=[[0 for y in range(dimY)] for x in range(dimX)]
+        
+        for x in range(dimX):
+            for y in range(dimY):
+                self.map[x][y]=(Label(self.myContainer2,relief='solid',image=self.p,height=self.TileHeight, compound='left',width=self.TileWidth,text=" "))
+                self.map[x][y].grid(row=dimY-y,column=x)
         
         prb6 = 10 # chance in % for 6
         prb5 = 80
-        prb4 = 50
-        prb3 = 50
+        prb4 = 40
+        prb3 = 0
         prb2 = 50
         
         #Pass 1: Assign 6s        
         
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if random.randint(1,100) <= prb6:
                     self.map[x][y].configure(text=6)
                     self.map[x][y].configure(bg="sienna4")
                     
         #Pass 2: Assign 5s       
               
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if self.map[x][y].cget("text")==" ":                  
 
                     if 6 in self.SurroundingTiles(x, y) and random.randint(1,100) <= prb5:
@@ -80,8 +81,8 @@ class MyApp:
               
         #pass 3: Assign 4s
         
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if self.map[x][y].cget("text")==" ":                  
 
                     if 5 in self.SurroundingTiles(x, y) and random.randint(1,100) <= prb4:
@@ -90,8 +91,8 @@ class MyApp:
                             
         #pass 4: Assign 3s
         
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if self.map[x][y].cget("text")==" ":                  
 
                     if 4 in self.SurroundingTiles(x, y) and random.randint(1,100) <= prb3:
@@ -99,8 +100,8 @@ class MyApp:
                             self.map[x][y].configure(bg="sienna1")
         #pass 5: Assign 2s
         
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if self.map[x][y].cget("text")==" ":                  
 
                     if 3 in self.SurroundingTiles(x, y) and random.randint(1,100) <= prb2:
@@ -108,19 +109,12 @@ class MyApp:
                             self.map[x][y].configure(bg="green3")
         #pass 6: Assign 1s
         
-        for x in range(self.dimX):
-            for y in range(self.dimY):
+        for x in range(dimX):
+            for y in range(dimY):
                 if self.map[x][y].cget("text")==" ":             
                             self.map[x][y].configure(text=1)   
                             self.map[x][y].configure(bg="green2")
     
-    
-    
-
-        
-        
-        
-        
     def RandomMove(self):
         
         self.map[self.pos[0]][self.pos[1]].configure(bg="red")
