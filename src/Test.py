@@ -1,14 +1,15 @@
-
-dimX=2
-dimY=2
-
-
-map=[[[] for y in range(dimY)] for x in range(dimX)]
+class Zup():
+    def __init__(self):
+        self.ja=10
+        self.nein=20
 
 
-for x in range(dimX):
-    for y in range(dimY):
-        map[x][y].append(["X"+str(x)])
-        map[x][y].append(["Y"+str(y)])
-        
-print map[0][0]
+
+potz=Zup()
+zotz=potz
+
+print potz.ja
+
+zotz.ja=25
+
+print potz.ja        
