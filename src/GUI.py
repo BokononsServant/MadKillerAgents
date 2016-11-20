@@ -4,6 +4,7 @@ from pygments.styles.paraiso_dark import BACKGROUND
 import random
 import time
 import Player
+from random import Random
 
 class MyApp:
     def __init__(self, parent):
@@ -20,8 +21,7 @@ class MyApp:
         self.button1.focus_force()                
         
         self.dimX=14
-        self.dimY=14
-        
+        self.dimY=14        
                 
         self.turnTimer=0
         self.MapGeneration(self.dimX,self.dimY) # Args are dimensions of the map       
@@ -35,39 +35,61 @@ class MyApp:
         self.AllPlayers.append(self.player3)    
         
 
-        self.CreateArmy(self.player1, 0, 0, 20)
-        self.CreateArmy(self.player1, 0, 0, 20)       
+        self.CreateArmy(self.player1, 8, 8, 20)
+        self.CreateArmy(self.player1, 2, 2, 20)
         self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         
-        #self.RemoveArmy(0,0, 20)
-        print self.player1.ownedTiles
+        #self.MoveArmy(x=2,y=2,units="all",rnd=True)
+        #self.MoveArmy(x=0,y=0,mvmtX=1,mvmtY=1,units=10)
+        #self.NewTurn()
+        
+
+
+
         
 
 
     def NewTurn(self):
-        self.turnTimer=self.turnTimer+1
+        #self.turnTimer=self.turnTimer+1
+       # print self.player1.ownedTiles
+        for OPT in self.player1.ownedTiles:
+            #print OPT            
+            self.MoveArmy(x=OPT[0],y=OPT[1],units='all', rnd=True)
+            
+            
+        
+         
+        #print self.turnTimer
         
 
-        #self.moves=[[-1,0],[1,0],[0,1],[0,-1]]
-        #self.pos=[random.randint(0,self.dimX-1),random.randint(0,self.dimY-1)]                
-        #self.map[self.pos[0]][self.pos[1]].configure(bg="green")   
+    def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units=0,rnd=False):
+        """
+         
+        """        
         
-        #print self.pos         
+        moves=[[-1,0],[1,0],[0,1],[0,-1]]        
+        rndMv=random.choice(moves)
         
-             
-
-        #for i in range(100):         
-            #self.myContainer2.after(i*400,self.RandomMove)  
-            #self.myContainer1.after(200,self.RandomMove)
-            
-            #self.delay
-            
-            
-            
-    def MoveArmy(self,strtTile, dstTile):
-        pass
-    
+        if rnd:
+            mvmtX=rndMv[0]
+            mvmtY=rndMv[1]     
+        
+        if x<0 or y<0 or x>self.dimX-1 or y>self.dimX-1 or x+mvmtX<0 or y+mvmtY<0 or x+mvmtX>self.dimX-1 or y+mvmtY>self.dimX-1:
+            print "Coordinates outside of map!"
+            return "Coordinates outside of map!" 
+        
+        if mvmtX==mvmtY==0:
+            return
+        
+        
+        if units == "all": units=self.map[x][y]["Army"]
+        
+        if self.map[x][y]["Owner"]!=" ":
+            self.CreateArmy(plyr=self.map[x][y]["Owner"],x=x+mvmtX,y=y+mvmtY,size=units)
+            self.RemoveArmy(x, y, units)        
+          
+          
     def RemoveArmy(self,x,y,size):
         """
         Removes a number of units from an army.
@@ -96,8 +118,8 @@ class MyApp:
             #return "Impassable Terrain!"
         
         if size<0:
-            print "Army size may not be nagative. Use RemoveArmy() instead"
-            return "Army size may not be nagative. Use RemoveArmy() instead"
+            print "Army size may not be negative. Use RemoveArmy() instead"
+            return "Army size may not be negative. Use RemoveArmy() instead"
         
         if x<0 or x>self.dimX-1 or y<0 or y>self.dimY-1:
             print "Coordinates outside of map!"
@@ -105,14 +127,13 @@ class MyApp:
         
         if self.map[x][y]["Owner"]!=plyr and self.map[x][y]["Owner"]!=" ":
             self.Battle()
-            return        
-        
-
-        self.map[x][y]["Army"]=self.map[x][y]["Army"]+size       
-        self.map[x][y]["Owner"]=plyr
-        if self.map[x][y]["Owner"]==plyr:
-            plyr.ownedTiles.append([x,y])
+            return    
             
+        if self.map[x][y]["Owner"]==" ":
+            plyr.ownedTiles.append([x,y])
+            self.map[x][y]["Owner"]=plyr       
+        
+        self.map[x][y]["Army"]=self.map[x][y]["Army"]+size     
         self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
         self.map[x][y]["Tile"].configure(fg=plyr.color)
         
@@ -127,7 +148,7 @@ class MyApp:
         """
         Creates a dimX x dimY Map and fills it with Tile Values
         The map is a dimX x dimY 2D Array and each array-element contains a dictionary
-        Keys are TileValue, Tile, Owner,Army
+        Keys are TileValue, Tile, Owner, Army, City
         
         """
         
@@ -141,6 +162,7 @@ class MyApp:
         for x in range(dimX):
             for y in range(dimY):
                 self.map[x][y]["Army"]=0
+                self.map[x][y]["City"]=" "
                 self.map[x][y]["Owner"]=" "
                 self.map[x][y]["TileValue"]=" "
                 self.map[x][y]["Tile"]=Label(self.myContainer2,relief='solid',image=self.p,height=self.TileHeight, compound='left',width=self.TileWidth,text=self.map[x][y]["TileValue"])
@@ -213,20 +235,21 @@ class MyApp:
                             self.map[x][y]["Tile"].configure(bg="green2")
      
     def RandomMove(self):
-         
+        
+
         self.map[self.pos[0]][self.pos[1]].configure(bg="red")
-             
+              
         self.move=random.choice(self.moves)            
         self.moveX=self.move[0]
         self.moveY=self.move[1]
-             
+              
         while self.moveX+self.pos[0]<0 or self.moveX+self.pos[0]>self.dimX-1 or self.moveY+self.pos[1]<0 or self.moveY+self.pos[1]>self.dimY-1:
             self.move=random.choice(self.moves)            
             self.moveX=self.move[0]
             self.moveY=self.move[1]
-                 
+                  
         self.map[self.pos[0]+self.moveX][self.pos[1]+self.moveY].configure(bg="green")
-             
+              
         self.pos=[self.pos[0]+self.moveX,self.pos[1]+self.moveY]
 
     def button1Click(self):  ### (3)
