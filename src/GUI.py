@@ -8,7 +8,8 @@ from random import Random
 
 class MyApp:
     def __init__(self, parent):
-       
+        
+        #initialize GUI
         self.myParent = parent   
         self.myContainer1 = Frame(parent)
         self.myContainer1.pack()   
@@ -20,52 +21,67 @@ class MyApp:
         self.button1.pack(side=LEFT)
         self.button1.focus_force()                
         
+        #dimensions of the map        
         self.dimX=14
         self.dimY=14        
-                
-        self.turnTimer=0
-        self.MapGeneration(self.dimX,self.dimY) # Args are dimensions of the map       
-        
-        self.AllPlayers=[]
-        self.player1=Player.NewPlayer(name="Gabriel",color="blue")
-        self.AllPlayers.append(self.player1)    
-        self.player2=Player.NewPlayer(name="Jaap",color="yellow")
-        self.AllPlayers.append(self.player2)    
-        self.player3=Player.NewPlayer(name="Barbarian",color="red")
-        self.AllPlayers.append(self.player3)    
-        
 
-        self.CreateArmy(self.player1, 8, 8, 20)
-        self.CreateArmy(self.player1, 2, 2, 20)
-        self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
-        self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
+        #generate Map
+        self.MapGeneration(self.dimX,self.dimY)   
         
-        #self.MoveArmy(x=2,y=2,units="all",rnd=True)
-        #self.MoveArmy(x=0,y=0,mvmtX=1,mvmtY=1,units=10)
-        #self.NewTurn()
+        #initialize Turn Timer        
+        self.turnTimer=0       
         
-
+        #initialize Players
+        self.SetUpPlayers()        
+  
+        #generate starting units
+        self.CreateArmy(self.player1, x=8, y=8, size=20,ignore6=True)
+        self.CreateArmy(self.player1, x=2, y=2, size=20,ignore6=True)
+        self.CreateArmy(self.player1, x=6, y=6, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
+        
+        #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
+        #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
+        #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
+        
+        #start game 
+        #for i in range(1220):
+            #self.myContainer1.after(i*400,self.NewTurn) #Dont use NewTurn with brackets!
+            #self.NewTurn()
 
 
         
 
 
     def NewTurn(self):
-        #self.turnTimer=self.turnTimer+1
-       # print self.player1.ownedTiles
-        for OPT in self.player1.ownedTiles:
-            #print OPT            
-            self.MoveArmy(x=OPT[0],y=OPT[1],units='all', rnd=True)
-            
-            
         
-         
-        #print self.turnTimer
+        #self.MoveArmy(8, 8, -1, 0, 31)
+        
+        
+        
+        #Random move
+        self.turnTimer=self.turnTimer+1
+        
+        
+        LP1=list(self.player1.ownedTiles) #make copy of List bc. otherwise the list would be updated when it is modified by MoveArmy, breaking the iteration
+        LP2=list(self.player2.ownedTiles)      
+        for T in LP1: 
+            self.MoveArmy(x=T[0],y=T[1],units='all', rnd=True)
+        for T in LP2: 
+            self.MoveArmy(x=T[0],y=T[1],units='all', rnd=True)           
+        
+        
+              
+        print "Turn "+str(self.turnTimer)+" done"
         
 
-    def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units=0,rnd=False):
+    def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units='all',rnd=False):
         """
-         
+        Move army consits of two functions:
+        First a new army is created on the destination tile then the old army is deleted
+        Check against Coordinates outside of Map, impassable Terrain, battle, too many units
         """        
         
         moves=[[-1,0],[1,0],[0,1],[0,-1]]        
@@ -73,17 +89,28 @@ class MyApp:
         
         if rnd:
             mvmtX=rndMv[0]
-            mvmtY=rndMv[1]     
+            mvmtY=rndMv[1]  
+        
+        if units == "all": units=self.map[x][y]["Army"]
+        if units > self.map[x][y]["Army"]: units=self.map[x][y]["Army"]   
         
         if x<0 or y<0 or x>self.dimX-1 or y>self.dimX-1 or x+mvmtX<0 or y+mvmtY<0 or x+mvmtX>self.dimX-1 or y+mvmtY>self.dimX-1:
             print "Coordinates outside of map!"
             return "Coordinates outside of map!" 
         
+        if self.map[x+mvmtX][y+mvmtY]["TileValue"] == 6:
+            print "Impassable Terrain!"
+            return "Impassable Terrain!"
+        
+        if self.map[x+mvmtX][y+mvmtY]["Owner"]!=self.map[x][y]["Owner"] and self.map[x+mvmtX][y+mvmtY]["Owner"]!=" ":
+            print "Battle!"
+            self.Battle(x,y, mvmtX,mvmtY,units)
+            return 
+        
         if mvmtX==mvmtY==0:
-            return
+            return        
         
         
-        if units == "all": units=self.map[x][y]["Army"]
         
         if self.map[x][y]["Owner"]!=" ":
             self.CreateArmy(plyr=self.map[x][y]["Owner"],x=x+mvmtX,y=y+mvmtY,size=units)
@@ -106,16 +133,17 @@ class MyApp:
             self.map[x][y]["Army"]=self.map[x][y]["Army"]-size
             self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
  
-    def CreateArmy(self,plyr,x,y,size): 
+    def CreateArmy(self,plyr,x,y,size,ignore6=False): 
         """
         Creates an army of size 'size' at position x and y for the player       
-        Also sets ownership of the tile 
+        Sets ownership of the tile 
         If tile is already occupied initiates battle
+        Check against Coordinates outside of Map, Impassable Terrain (can be ignored), negative army size
         """
         
-        #if self.map[x][y]["TileValue"] == 6:
-            #print "Impassable Terrain!"
-            #return "Impassable Terrain!"
+        if self.map[x][y]["TileValue"] == 6 and ignore6==False:
+            print "Impassable Terrain!"
+            return "Impassable Terrain!"
         
         if size<0:
             print "Army size may not be negative. Use RemoveArmy() instead"
@@ -125,9 +153,7 @@ class MyApp:
             print "Coordinates outside of map!"
             return "Coordinates outside of map!"       
         
-        if self.map[x][y]["Owner"]!=plyr and self.map[x][y]["Owner"]!=" ":
-            self.Battle()
-            return    
+   
             
         if self.map[x][y]["Owner"]==" ":
             plyr.ownedTiles.append([x,y])
@@ -136,14 +162,52 @@ class MyApp:
         self.map[x][y]["Army"]=self.map[x][y]["Army"]+size     
         self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
         self.map[x][y]["Tile"].configure(fg=plyr.color)
+        #print str(x)+" "+str(y)
         
         
         
         
-    def Battle(self,x,y):
-        print "Battle on tile "+str(x)+" x "+ str(y)
+    def Battle(self,x,y, mvmtX,mvmtY,units):
+        
+        print "Battle for tile "+str(x+mvmtX)+" "+str(y+mvmtY)
+        
+        attackerUnits=units
+        defenderUnits=self.map[x+mvmtX][y+mvmtY]["Army"]
+        attacker=self.map[x][y]["Owner"].name
+        defender=self.map[x+mvmtX][y+mvmtY]["Owner"].name
+        #attackerArmor=self.map[x][y]["TileValue"]
+        defenderArmor=self.map[x+mvmtX][y+mvmtY]["TileValue"]
+        
+        print attacker+" has "+str(attackerUnits)+" units against "+defender+ "\'s "+str(defenderUnits)+" units"
+        print defender+" fights on "+str(defenderArmor)
         
         
+        if attackerUnits<defenderUnits+defenderArmor:             
+            self.RemoveArmy(x, y, attackerUnits) #if attacker has less units than defender+TV he looses all his attacking units
+        else:
+            self.RemoveArmy(x, y, defenderUnits+defenderArmor) #if attacker has equal or more units than defender he looses units equal to the amount of defending units+TV
+        
+        
+        self.RemoveArmy(x+mvmtX, y+mvmtY, attackerUnits-defenderArmor)
+        
+        
+        if self.map[x][y]["Army"] > 0 and self.map[x+mvmtX][y+mvmtY]<=0:
+            self.MoveArmy(x, y, mvmtX, mvmtY, units)
+            print attacker + " wins " + str(self.map[x][y]["Army"]) + " : "+str(self.map[x+mvmtX][y+mvmtY]["Army"])
+        else:
+            print defender + " wins " + str(self.map[x][y]["Army"]) + " : "+str(self.map[x+mvmtX][y+mvmtY]["Army"])   
+                                        
+        
+    def SetUpPlayers(self):
+        
+        self.AllPlayers=[]
+        self.player1=Player.NewPlayer(name="Gabriel",color="blue")
+        self.AllPlayers.append(self.player1)    
+        self.player2=Player.NewPlayer(name="Jaap",color="yellow")
+        self.AllPlayers.append(self.player2)    
+        self.player3=Player.NewPlayer(name="Barbarian",color="red")
+        self.AllPlayers.append(self.player3) 
+            
     def MapGeneration(self,dimX,dimY):  
         """
         Creates a dimX x dimY Map and fills it with Tile Values

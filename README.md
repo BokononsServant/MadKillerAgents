@@ -27,7 +27,10 @@ Each Army has 1 movement point (MP).
 
 ## Combat
 
-When two armies fight, units destroy themselves 1:1. 5 vs 5 leaves no survivor, 5 vs 4 leaves one attacker. The only remaining factor is tile value. TV gets factored in before units are lost. 5 armies on a 3 value field fighting against 2 armies on a 1 value field -> attacker looses 0 units. This battle would translate into 5+3 against 2+1. Attacker would loose 3 units, as would the defender. But the attacker has 3 TV "armor", so he doesn't loose any units. If defender is in a city he gets extra armor equal to city size. When the defender in a city is defeated the city is damaged. When city size reaches 0 the city is destroyed.
+* When two armies fight, units destroy themselves 1:1. 5 vs 5 leaves no survivor, 5 vs 4 leaves one attacker. The only remaining factor is tile value which acts as armor for the defender. Before the defender looses units TV is substracted from his losses. 5 vs 4 when the defender is on a +3 Tiles results in the attacker loosing 4 units and the defender (4-3)=1 unit. 
+
+
+* When two armies fight, units destroy themselves 1:1. 5 vs 5 leaves no survivor, 5 vs 4 leaves one attacker. TV gets factored in before units are lost. 5 armies on a 3 value field fighting against 2 armies on a 1 value field -> attacker looses 0 units. This battle would translate into 5+3 against 2+1. Attacker would loose 3 units, as would the defender. But the attacker has 3 TV "armor", so he doesn't loose any units. If defender is in a city he gets extra armor equal to city size. When the defender in a city is defeated the city is damaged. When city size reaches 0 the city is destroyed.
 
 If one of the armies is much bigger (20x) then the other, then it looses no units and stomps the other. 
 
