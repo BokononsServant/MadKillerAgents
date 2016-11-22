@@ -5,4 +5,5 @@ class NewPlayer:
         self.name=name
         self.color=color
         self.ownedTiles=[]
+        self.cities=[]
         

@@ -5,6 +5,7 @@ import random
 import time
 import Player
 from random import Random
+import City
 
 class MyApp:
     def __init__(self, parent):
@@ -26,8 +27,8 @@ class MyApp:
         self.dimY=14        
 
         #generate Map
-        self.MapGeneration(self.dimX,self.dimY)   
-        
+        self.MapGeneration(self.dimX,self.dimY)         
+
         #initialize Turn Timer        
         self.turnTimer=0       
         
@@ -35,12 +36,17 @@ class MyApp:
         self.SetUpPlayers()        
   
         #generate starting units
-        self.CreateArmy(self.player1, x=8, y=8, size=20,ignore6=True)
-        self.CreateArmy(self.player1, x=2, y=2, size=20,ignore6=True)
-        self.CreateArmy(self.player1, x=6, y=6, size=20,ignore6=True)
-        self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
-        self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
-        self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
+        self.CreateArmy(self.player1, x=1, y=0, size=20,ignore6=True)
+#         self.CreateArmy(self.player1, x=2, y=2, size=20,ignore6=True)
+#         self.CreateArmy(self.player1, x=6, y=6, size=20,ignore6=True)
+#         self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
+#         self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
+#         self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
+        #generate starting cities
+        self.CreateCity(self.player1, 0, 0)
+        self.CreateCity(self.player1, 0, 1)
+        
+        
         
         #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
@@ -57,14 +63,15 @@ class MyApp:
 
     def NewTurn(self):
         
-        #self.MoveArmy(8, 8, -1, 0, 31)
+        self.MoveArmy(1, 0, -1, 0, 'all')
+        self.MoveArmy(0, 0, 1, 0, 'all')
         
         
         
         #Random move
         self.turnTimer=self.turnTimer+1
         
-        
+        """
         LP1=list(self.player1.ownedTiles) #make copy of List bc. otherwise the list would be updated when it is modified by MoveArmy, breaking the iteration
         LP2=list(self.player2.ownedTiles)      
         for T in LP1: 
@@ -75,7 +82,7 @@ class MyApp:
         
               
         print "Turn "+str(self.turnTimer)+" done"
-        
+        """
 
     def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units='all',rnd=False):
         """
@@ -84,10 +91,9 @@ class MyApp:
         Check against Coordinates outside of Map, impassable Terrain, battle, too many units
         """        
         
-        moves=[[-1,0],[1,0],[0,1],[0,-1]]        
-        rndMv=random.choice(moves)
-        
         if rnd:
+            moves=[[-1,0],[1,0],[0,1],[0,-1]]
+            rndMv=random.choice(moves)
             mvmtX=rndMv[0]
             mvmtY=rndMv[1]  
         
@@ -109,9 +115,7 @@ class MyApp:
         
         if mvmtX==mvmtY==0:
             return        
-        
-        
-        
+
         if self.map[x][y]["Owner"]!=" ":
             self.CreateArmy(plyr=self.map[x][y]["Owner"],x=x+mvmtX,y=y+mvmtY,size=units)
             self.RemoveArmy(x, y, units)        
@@ -127,8 +131,8 @@ class MyApp:
             self.map[x][y]["Army"]=0
             self.map[x][y]["Owner"].ownedTiles.remove([x,y])                        
             self.map[x][y]["Owner"]=" "
-            self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))
-            self.map[x][y]["Tile"].configure(fg="black")
+            self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"]))
+            self.map[x][y]["Tile"].configure(fg='black')
         else:
             self.map[x][y]["Army"]=self.map[x][y]["Army"]-size
             self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
@@ -159,14 +163,25 @@ class MyApp:
             plyr.ownedTiles.append([x,y])
             self.map[x][y]["Owner"]=plyr       
         
-        self.map[x][y]["Army"]=self.map[x][y]["Army"]+size     
-        self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
+        self.map[x][y]["Army"]=self.map[x][y]["Army"]+size
+        if self.map[x][y]['City']!=" ":
+            self.map[x][y]["Tile"].configure(text="TV: "+str(self.map[x][y]["TileValue"])+"\n"+"AS: "+str(self.map[x][y]["Army"])+"\n"+self.map[x][y]['City'].name+": "+str(self.map[x][y]['City'].pop))
+        else:
+            self.map[x][y]["Tile"].configure(text="TV: "+str(self.map[x][y]["TileValue"])+"\n"+"AS: "+str(self.map[x][y]["Army"]))
+            
         self.map[x][y]["Tile"].configure(fg=plyr.color)
         #print str(x)+" "+str(y)
         
+    def CreateCity(self,plyr,x,y):
         
+        tmp=City.newCity(plyr,x,y,map=self.map)
         
+        plyr.cities.append(tmp)
+        if self.map[x][y]['City'] == " ":
+            self.map[x][y]['City'] = tmp
+            
         
+  
     def Battle(self,x,y, mvmtX,mvmtY,units):
         
         print "Battle for tile "+str(x+mvmtX)+" "+str(y+mvmtY)

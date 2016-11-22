@@ -1,13 +1,23 @@
 class Test:
     def __init__(self):
-        self.list=[1,2,3]
+        self.a=500
+        print "aa"
 
 
-x=Test()
+tmp=Test()
 
-print x.a
-y=x.a
-print y
-x.a.remove(1)
-print x.a
-print y
+a=tmp
+b=tmp
+
+tmp=" "
+
+
+a.a =200
+print a.a
+print b.a
+print tmp
+
+
+
+
+
