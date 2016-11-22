@@ -37,14 +37,16 @@ class MyApp:
   
         #generate starting units
         self.CreateArmy(self.player1, x=1, y=0, size=20,ignore6=True)
-#         self.CreateArmy(self.player1, x=2, y=2, size=20,ignore6=True)
-#         self.CreateArmy(self.player1, x=6, y=6, size=20,ignore6=True)
-#         self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
-#         self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
-#         self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
+        self.CreateArmy(self.player1, x=2, y=2, size=20,ignore6=True)
+        self.CreateArmy(self.player1, x=6, y=6, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
+        self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
         #generate starting cities
-        self.CreateCity(self.player1, 0, 0)
-        self.CreateCity(self.player1, 0, 1)
+        
+        #self.CreateCity(self.player1, 0, 0)
+        #self.CreateCity(self.player1, 0, 1)
+
         
         
         
@@ -53,9 +55,9 @@ class MyApp:
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         
         #start game 
-        #for i in range(1220):
-            #self.myContainer1.after(i*400,self.NewTurn) #Dont use NewTurn with brackets!
-            #self.NewTurn()
+        for i in range(100):
+            self.myContainer1.after(i*400,self.NewTurn) #Dont use NewTurn with brackets!
+            
 
 
         
@@ -63,15 +65,18 @@ class MyApp:
 
     def NewTurn(self):
         
-        self.MoveArmy(1, 0, -1, 0, 'all')
-        self.MoveArmy(0, 0, 1, 0, 'all')
+#         self.BeginningOfTurn()
+#         
+#         self.MoveArmy(1, 0, -1, 0, 'all')
+#         self.MoveArmy(0, 0, 0, 1, 'all')
+#         self.MoveArmy(0, 1, 0, 1, 'all')
         
-        
-        
-        #Random move
         self.turnTimer=self.turnTimer+1
         
-        """
+        #Random move
+        
+        
+        
         LP1=list(self.player1.ownedTiles) #make copy of List bc. otherwise the list would be updated when it is modified by MoveArmy, breaking the iteration
         LP2=list(self.player2.ownedTiles)      
         for T in LP1: 
@@ -82,23 +87,33 @@ class MyApp:
         
               
         print "Turn "+str(self.turnTimer)+" done"
-        """
-
+        
+    def BeginningOfTurn(self):
+        for plyr in self.AllPlayers:
+            for cty in plyr:
+                pass
+    
     def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units='all',rnd=False):
+        
         """
         Move army consits of two functions:
         First a new army is created on the destination tile then the old army is deleted
-        Check against Coordinates outside of Map, impassable Terrain, battle, too many units
+        Check against Coordinates outside of Map, impassable Terrain, battle, too many units, zero units
         """        
+        
         
         if rnd:
             moves=[[-1,0],[1,0],[0,1],[0,-1]]
             rndMv=random.choice(moves)
             mvmtX=rndMv[0]
             mvmtY=rndMv[1]  
+            
+        if mvmtX==mvmtY==0:
+            return 
         
         if units == "all": units=self.map[x][y]["Army"]
         if units > self.map[x][y]["Army"]: units=self.map[x][y]["Army"]   
+        if units == 0: return 
         
         if x<0 or y<0 or x>self.dimX-1 or y>self.dimX-1 or x+mvmtX<0 or y+mvmtY<0 or x+mvmtX>self.dimX-1 or y+mvmtY>self.dimX-1:
             print "Coordinates outside of map!"
@@ -111,10 +126,7 @@ class MyApp:
         if self.map[x+mvmtX][y+mvmtY]["Owner"]!=self.map[x][y]["Owner"] and self.map[x+mvmtX][y+mvmtY]["Owner"]!=" ":
             print "Battle!"
             self.Battle(x,y, mvmtX,mvmtY,units)
-            return 
-        
-        if mvmtX==mvmtY==0:
-            return        
+            return       
 
         if self.map[x][y]["Owner"]!=" ":
             self.CreateArmy(plyr=self.map[x][y]["Owner"],x=x+mvmtX,y=y+mvmtY,size=units)
@@ -127,16 +139,26 @@ class MyApp:
         When army size reaches 0, reverts tile to unoccupied state       
         """
         
-        if size >= self.map[x][y]["Army"]:
+        if size >= self.map[x][y]["Army"] and self.map[x][y]['City']==" ":
             self.map[x][y]["Army"]=0
             self.map[x][y]["Owner"].ownedTiles.remove([x,y])                        
             self.map[x][y]["Owner"]=" "
             self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"]))
             self.map[x][y]["Tile"].configure(fg='black')
-        else:
+            
+            
+        elif size >= self.map[x][y]["Army"] and self.map[x][y]['City']!=" ":
+            self.map[x][y]["Army"]=0
+            self.map[x][y]["Tile"].configure(text="TV: "+str(self.map[x][y]["TileValue"])+"\n"+"AS: "+str(self.map[x][y]["Army"])+"\n"+self.map[x][y]['City'].name+": "+str(self.map[x][y]['City'].pop))
+            
+        elif self.map[x][y]['City']!=" ":
             self.map[x][y]["Army"]=self.map[x][y]["Army"]-size
-            self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))        
- 
+            self.map[x][y]["Tile"].configure(text="TV: "+str(self.map[x][y]["TileValue"])+"\n"+"AS: "+str(self.map[x][y]["Army"])+"\n"+self.map[x][y]['City'].name+": "+str(self.map[x][y]['City'].pop))  
+                
+        elif self.map[x][y]['City']==" ":
+            self.map[x][y]["Army"]=self.map[x][y]["Army"]-size
+            self.map[x][y]["Tile"].configure(text=str(self.map[x][y]["TileValue"])+"\n"+str(self.map[x][y]["Army"]))   
+             
     def CreateArmy(self,plyr,x,y,size,ignore6=False): 
         """
         Creates an army of size 'size' at position x and y for the player       
@@ -206,7 +228,7 @@ class MyApp:
         self.RemoveArmy(x+mvmtX, y+mvmtY, attackerUnits-defenderArmor)
         
         
-        if self.map[x][y]["Army"] > 0 and self.map[x+mvmtX][y+mvmtY]<=0:
+        if self.map[x][y]["Army"] > 0 and self.map[x+mvmtX][y+mvmtY]['Army']<=0:
             self.MoveArmy(x, y, mvmtX, mvmtY, units)
             print attacker + " wins " + str(self.map[x][y]["Army"]) + " : "+str(self.map[x+mvmtX][y+mvmtY]["Army"])
         else:
