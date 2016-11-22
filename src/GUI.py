@@ -7,6 +7,7 @@ import random
 import time
 import Player
 from random import Random
+import City
 
 
 class MyApp:
@@ -47,7 +48,7 @@ class MyApp:
         
         #generate starting cities
 
-        #self.CreateCity(self.player1, 0, 0)
+        self.CreateCity(self.player1, 0, 0)
         #self.CreateCity(self.player1, 0, 1)
 
 
@@ -77,8 +78,6 @@ class MyApp:
         self.turnTimer=self.turnTimer+1
 
         #Random move
-
-
 
         LP1=list(self.player1.ownedTiles) #make copy of List bc. otherwise the list would be updated when it is modified by <Enter Your Name>
         LP2=list(self.player2.ownedTiles)
