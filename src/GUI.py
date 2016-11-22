@@ -1,6 +1,6 @@
 from Tkinter import *
-from docutils.nodes import compound
-from pygments.styles.paraiso_dark import BACKGROUND
+#from docutils.nodes import compound
+#from pygments.styles.paraiso_dark import BACKGROUND
 import random
 import time
 import Player
@@ -42,6 +42,7 @@ class MyApp:
         self.CreateArmy(self.player2, x=7, y=8, size=20,ignore6=True)
         self.CreateArmy(self.player2, x=1, y=1, size=20,ignore6=True)
         self.CreateArmy(self.player2, x=3, y=3, size=20,ignore6=True)
+        
         #generate starting cities
         
         #self.CreateCity(self.player1, 0, 0)
@@ -90,7 +91,7 @@ class MyApp:
         
     def BeginningOfTurn(self):
         for plyr in self.AllPlayers:
-            for cty in plyr:
+            for cty in plyr.cities:
                 pass
     
     def MoveArmy(self,x,y, mvmtX=0,mvmtY=0,units='all',rnd=False):
