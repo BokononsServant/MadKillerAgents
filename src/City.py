@@ -3,6 +3,7 @@ cnt=0
 class newCity:
     
     def __init__(self,plyr,x,y,map):
+        #if x<0 or y<0 or x>map.
         global cnt        
         self.name = plyr.name[:2]+str(cnt)        
         cnt=cnt+1
@@ -14,6 +15,40 @@ class newCity:
         plyr.ownedTiles.append([x,y])
         plyr.cities.append([x,y])
         
-    def FirstRing(self):
-        self.workedTiles=[]
-        #self.workedTiles.append(map[x])
+    def FirstRing(self,x,y):
+        self.SourroundingTilesValues=[]
+        
+        PT=[[-1,1],[0,1],[1,1]
+            [-1,0],[0,0],[1,0]
+            [-1,-1],[0,-1],[0,1]]
+        
+        if x==0 and y==0:
+            self.SourroundingTilesValues.append([0,1],[])
+        
+    def addXY(self,T1,T2):
+        """
+        add two coordinates [1,1] + [2,3] = [3,4]
+        """
+        if len(T1)!=2 or len(T2)!=2:
+            print "Error: Not coordinates! Array length !=2!"
+            return "Error: Not coordinates! Array length !=2!"
+        else:
+            try:
+                T1[0]+1
+                T1[1]+1
+                T2[0]+1
+                T2[1]+1
+            except:
+                print "Error: Not coordinates! Array Elements not integers!"
+                return "Error: Not coordinates! Array Elements not integers!"
+            
+            T=[T1[0]+T2[0],T1[1]+T2[1]]
+            return T
+        
+            
+
+
+
+
+
+        

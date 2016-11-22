@@ -33,7 +33,8 @@ class MyApp:
 
         # generate Map
         self.MapGeneration(self.dimX, self.dimY)
-
+        print len(self.map)
+        print len(self.map[0])
         # initialize Turn Timer
         self.turnTimer = 0
 
@@ -57,11 +58,10 @@ class MyApp:
         #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
-
         # start game
-        for i in range(100):
+        #for i in range(100):
             # Dont use NewTurn with brackets!
-            self.myContainer1.after(i * 400, self.NewTurn)
+            #self.myContainer1.after(i * 400, self.NewTurn)
 
     def NewTurn(self):
 
