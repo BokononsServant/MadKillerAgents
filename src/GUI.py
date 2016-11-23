@@ -6,7 +6,6 @@ from Tkinter import *
 import random
 import time
 import Player
-from random import Random
 import City
 
 
