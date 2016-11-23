@@ -14,36 +14,50 @@ class newCity:
         map[x][y]['Tile'].configure(fg=plyr.color)
         plyr.ownedTiles.append([x,y])
         plyr.cities.append([x,y])
+        self.FirstRing(x,y,map)
         
-    def FirstRing(self,x,y):
-        self.SourroundingTilesValues=[]
+    def FirstRing(self,x,y,map):
         
-        PT=[[-1,1],[0,1],[1,1]
-            [-1,0],[0,0],[1,0]
-            [-1,-1],[0,-1],[0,1]]
+        self.SurroundingTilesValues=[]
         
-        if x==0 and y==0:
-            self.SourroundingTilesValues.append([0,1],[])
+        #PT=possible Tiles
         
-    def addXY(self,T1,T2):
-        """
-        add two coordinates [1,1] + [2,3] = [3,4]
-        """
-        if len(T1)!=2 or len(T2)!=2:
-            print "Error: Not coordinates! Array length !=2!"
-            return "Error: Not coordinates! Array length !=2!"
-        else:
-            try:
-                T1[0]+1
-                T1[1]+1
-                T2[0]+1
-                T2[1]+1
-            except:
-                print "Error: Not coordinates! Array Elements not integers!"
-                return "Error: Not coordinates! Array Elements not integers!"
+        PT=[[-1,1 ],[0, 1],[1,1],
+            [-1,0 ],       [1,0],
+            [-1,-1],[0,-1],[1,-1]]
+        
+        for t in PT:
             
-            T=[T1[0]+T2[0],T1[1]+T2[1]]
-            return T
+            try: 
+                if x+t[0]>=0 and y+t[1]>=0:
+                    if map[x+t[0]][y+t[1]]['TileValue'] == 0: pass
+                    else:
+                        self.SurroundingTilesValues.append(map[x+t[0]][y+t[1]]['TileValue'])
+                        self.SurroundingTilesValues.sort(reverse=True)
+            except:
+                pass
+                
+
+        
+#     def addXY(self,T1,T2):
+#         """
+#         add two coordinates [1,1] + [2,3] = [3,4]
+#         """
+#         if len(T1)!=2 or len(T2)!=2:
+#             print "Error: Not coordinates! Array length !=2!"
+#             return "Error: Not coordinates! Array length !=2!"
+#         else:
+#             try:
+#                 T1[0]+1
+#                 T1[1]+1
+#                 T2[0]+1
+#                 T2[1]+1
+#             except:
+#                 print "Error: Not coordinates! Array Elements not integers!"
+#                 return "Error: Not coordinates! Array Elements not integers!"
+#             
+#             T=[T1[0]+T2[0],T1[1]+T2[1]]
+#             return T
         
             
 

@@ -32,8 +32,7 @@ class MyApp:
 
         # generate Map
         self.MapGeneration(self.dimX, self.dimY)
-        print len(self.map)
-        print len(self.map[0])
+
         # initialize Turn Timer
         self.turnTimer = 0
 
@@ -42,33 +41,36 @@ class MyApp:
 
 
         # generate starting units
-        self.CreateArmy(self.player1, x=1, y=0, size=20, ignore6=True)
-        self.CreateArmy(self.player1, x=2, y=2, size=20, ignore6=True)
-        self.CreateArmy(self.player1, x=6, y=6, size=20, ignore6=True)
-        self.CreateArmy(self.player2, x=7, y=8, size=20, ignore6=True)
-        self.CreateArmy(self.player2, x=1, y=1, size=20, ignore6=True)
-        self.CreateArmy(self.player2, x=3, y=3, size=20, ignore6=True)
+#         self.CreateArmy(self.player1, x=1, y=0, size=20, ignore6=True)
+#         self.CreateArmy(self.player1, x=2, y=2, size=20, ignore6=True)
+#         self.CreateArmy(self.player1, x=6, y=6, size=20, ignore6=True)
+#         self.CreateArmy(self.player2, x=7, y=8, size=20, ignore6=True)
+#         self.CreateArmy(self.player2, x=1, y=1, size=20, ignore6=True)
+#         self.CreateArmy(self.player2, x=3, y=3, size=20, ignore6=True)
         # generate starting cities
 
+        self.CreateCity(self.player1, 10, 10)
+        self.CreateCity(self.player2, 5, 5)
+        self.CreateCity(self.player3, 1, 1)
 
-        self.CreateCity(self.player1, 0, 0)
         #self.CreateCity(self.player1, 0, 1)
 
         #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         # start game
-        #for i in range(100):
+        for i in range(100):
             # Dont use NewTurn with brackets!
-            #self.myContainer1.after(i * 400, self.NewTurn)
+            self.myContainer1.after(i * 400, self.NewTurn)
 
     def NewTurn(self):
 
-        #         self.BeginningOfTurn()
+        self.BeginningOfTurn()
         #
         #         self.MoveArmy(1, 0, -1, 0, 'all')
         #         self.MoveArmy(0, 0, 0, 1, 'all')
         #         self.MoveArmy(0, 1, 0, 1, 'all')
+        
 
 
 
@@ -78,19 +80,32 @@ class MyApp:
         # make copy of List bc. otherwise the list would be updated when it is
         LP1 = list(self.player1.ownedTiles)
         LP2 = list(self.player2.ownedTiles)
+        LP3 = list(self.player3.ownedTiles)
         self.turnTimer = self.turnTimer + 1
         
         for T in LP1:
             self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
         for T in LP2:
             self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
+        for T in LP3:
+            self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
+            
 
         print "Turn " + str(self.turnTimer) + " done"
 
     def BeginningOfTurn(self):
         for plyr in self.AllPlayers:
+            print plyr.name
             for cty in plyr.cities:
-                pass
+                try:
+                    producedArmies=0
+                    for i in range(cty.pop):
+                        producedArmies=producedArmies+cty.SurroundingTilesValues[i]
+                    
+                    self.CreateArmy(plyr, cty.pos[0], cty.pos[1], size=producedArmies, ignore6=True)
+                except:
+                    pass
+                
 
     def MoveArmy(self, x, y, mvmtX=0, mvmtY=0, units='all', rnd=False):
         """
