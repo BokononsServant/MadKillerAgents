@@ -29,7 +29,7 @@ class MyApp:
 
         # dimensions of the map
         self.dimX = 14
-        self.dimY = 14
+        self.dimY = 12
 
         # generate Map
         self.MapGeneration(self.dimX, self.dimY)

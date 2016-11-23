@@ -14,16 +14,50 @@ class newCity:
         map[x][y]['Tile'].configure(fg=plyr.color)
         plyr.ownedTiles.append([x,y])
         plyr.cities.append([x,y])
+        #self.FirstRing(x,y,map)
         
-    def FirstRing(self,x,y):
+    def FirstRing(self,x,y,map):
+        
         self.SourroundingTilesValues=[]
         
-        PT=[[-1,1],[0,1],[1,1]
-            [-1,0],[0,0],[1,0]
-            [-1,-1],[0,-1],[0,1]]
-        
+        dimX=len(map)
+        dimY=len(map[0])
+
+        #City is in one of the corners
         if x==0 and y==0:
-            self.SourroundingTilesValues.append([0,1],[])
+            self.SourroundingTilesValues.append(map[x+0][y+1]['TileValue'], map[x+1][y+1]['TileValue'],
+                                                                            map[x+1][y+0]['TileValue'])
+        if x==dimX-1 and y==0:
+            self.SourroundingTilesValues.append(map[x-1][y+1]['TileValue'], map[x+0][y+1]['TileValue'],
+                                                map[x-1][y+0]['TileValue'])
+        if x==dimX-1 and y==dimy-1:
+            self.SourroundingTilesValues.append(map[x-1][y+0]['TileValue'],
+                                                map[x-1][y-1]['TileValue'], map[x+0][y-1]['TileValue'])
+        if x==dimx-1 and y==0:
+            self.SourroundingTilesValues.append(                            map[x+1][y+0]['TileValue'],
+                                                map[x+0][y-1]['TileValue'], map[x-1][y-1]['TileValue']) 
+        
+        #city on one of the sides        
+        if x==0 and y<dimY-1 and y>0:
+            self.SourroundingTilesValues.append(map[x+0][y+1]['TileValue'], map[x+1][y+1]['TileValue'],
+                                                                            map[x+1][y+0]['TileValue'],
+                                                map[x+0][y-1]['TileValue'], map[x+1][y-1]['TileValue'])
+        
+        if x>0 and x<dimX-1 and y==0:
+            self.SourroundingTilesValues.append(map[x-1][y+1]['TileValue'], map[x+0][y+1]['TileValue'], map[x+1][y+1]['TileValue'],
+                                                map[x-1][y+0]['TileValue'],                             map[x+1][y+0]['TileValue'])
+        
+        if x>0 and x<dimX-1 and y==0:
+            self.SourroundingTilesValues.append(map[x-1][y+1]['TileValue'], map[x+0][y+1]['TileValue'], map[x+1][y+1]['TileValue'],
+                                                map[x-1][y+0]['TileValue'],                             map[x+1][y+0]['TileValue'])
+            
+        
+        
+        
+            
+           
+        
+        
         
     def addXY(self,T1,T2):
         """
