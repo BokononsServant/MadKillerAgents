@@ -19,7 +19,7 @@ Each Tile has a tile value (TV) between 1 and 6. This affects movement and attac
 
 *  1 acts as a road and allows units to move at 0.5 movement cost
 *  6 acts as Mountain and makes tile impassable
-*  In combat the tile yield acts as "armor" when calculating losses
+*  In combat the tile yield acts as "armor" for the defender when calculating losses
 
 ## Movement
 
@@ -47,10 +47,11 @@ At certain size intervals more actions become possible. These actions consume un
 
 *  decrease/ increase tile yield
 *  Forced march: loose 10% Unit strength per TV over 1 to make the tile 0.5 movement cost. 
-*  If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
+   If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
 *  build city
 *  grow city
-* Discover Technology
+*  Discover Technology
+*  increase vision 
 	
 ## Cities
 
