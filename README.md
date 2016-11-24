@@ -65,6 +65,21 @@ Cities can be founded by stacks of a certain size. They start at size 1 and work
 * Pillager: Prioritizes downgrading tiles
 * Barbarian: Does not found a city with its starting units and goes looking for the other players to attack.  Only viable when more than 2 players are in the game. Splits its army up according to number of other players and attacks each player only once.
 
+### Algorithms
+
+1. Pick army to move
+2. Check all surrounding tiles in x tiles Radius for enemy armies
+2. divide tiles in quadrants north/south/west/east
+3. tally armies per player/quadrant
+4. check for
+    *  own armies per quadrant
+    *  local superiority/ inferiority
+    *  move army to area of inferiority and seek combat
+    *  flee to nearest city 
+    *  wait for reinforcements
+    *  reinforce other army
+    *  etc
+
 ## Map Generation
 
 ### Mountains
