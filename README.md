@@ -19,7 +19,7 @@ Each Tile has a tile value (TV) between 1 and 6. This affects movement and attac
 
 *  1 acts as a road and allows units to move at 0.5 movement cost
 *  6 acts as Mountain and makes tile impassable
-*  In combat the tile yield acts as "armor" when calculating losses
+*  In combat the tile yield acts as "armor" for the defender when calculating losses
 
 ## Movement
 
@@ -47,10 +47,11 @@ At certain size intervals more actions become possible. These actions consume un
 
 *  decrease/ increase tile yield
 *  Forced march: loose 10% Unit strength per TV over 1 to make the tile 0.5 movement cost. 
-*  If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
+   If TV is 3, army looses 20% of its units but can then traverse this tile with 0.5 MP. Gains this ability as soon as x % evaluates to at least 1 unit (5 units in this case)
 *  build city
 *  grow city
-* Discover Technology
+*  Discover Technology
+*  increase vision 
 	
 ## Cities
 
@@ -63,6 +64,21 @@ Cities can be founded by stacks of a certain size. They start at size 1 and work
 
 * Pillager: Prioritizes downgrading tiles
 * Barbarian: Does not found a city with its starting units and goes looking for the other players to attack.  Only viable when more than 2 players are in the game. Splits its army up according to number of other players and attacks each player only once.
+
+### Algorithms
+
+1. Pick army to move
+2. Check all surrounding tiles in x tiles Radius for enemy armies
+2. divide tiles in quadrants north/south/west/east
+3. tally armies per player/quadrant
+4. check for
+    *  own armies per quadrant
+    *  local superiority/ inferiority
+    *  move army to area of inferiority and seek combat
+    *  flee to nearest city 
+    *  wait for reinforcements
+    *  reinforce other army
+    *  etc
 
 ## Map Generation
 
