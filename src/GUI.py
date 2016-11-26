@@ -7,7 +7,7 @@ import random
 import time
 import Player
 import City
-
+import GetSurroundingTiles
 
 class MyApp:
 
@@ -38,7 +38,12 @@ class MyApp:
 
         # initialize Players
         self.SetUpPlayers()
-
+        
+        #
+        self.B=GetSurroundingTiles.GetSurroundingTiles()
+        print self.B.GST(3,3,self.map)
+        print self.B.GST(3,4,self.map)
+        
 
         # generate starting units
 #         self.CreateArmy(self.player1, x=1, y=0, size=20, ignore6=True)
@@ -49,9 +54,9 @@ class MyApp:
 #         self.CreateArmy(self.player2, x=3, y=3, size=20, ignore6=True)
         # generate starting cities
 
-        self.CreateCity(self.player1, 10, 10)
-        self.CreateCity(self.player2, 5, 5)
-        self.CreateCity(self.player3, 1, 1)
+#         self.CreateCity(self.player1, 10, 10)
+#         self.CreateCity(self.player2, 5, 5)
+#         self.CreateCity(self.player3, 1, 1)
 
         #self.CreateCity(self.player1, 0, 1)
         
