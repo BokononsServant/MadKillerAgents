@@ -1,10 +1,19 @@
 import random
-import Tile
+from Tile import Tile
 import SurroundingTiles
 
 class Map:
     def __init__(self, dimX, dimY):
-        #self.map = []
+        """
+        If instatiated this class will generate a Map object with the specified dimensions.
+        The map is a 2D array, and every array field contains a Tile object.
+        For the tile object the following fields are set:
+            'value' gets assigned according to the used algorithm
+            'surrounding_tiles" gets a list containing the 8 immediately adjacent Tiles
+        To print the map to the console use print_map.
+        To reassign surrounding_tiles for all tiles use update_map_tiles
+        
+        """
         self.dimX = dimX
         self.dimY = dimY
         self.GST=SurroundingTiles.get()
@@ -54,7 +63,8 @@ class Map:
     def update_map_tiles(self):
         for x in range(self.dimX):
             for y in range(self.dimY):                
-                self.map[x][y].surrounding_tiles = self.GST.get(x, y, self.map,attr='value')                
+                #self.map[x][y].surrounding_tiles = self.GST.get(x, y, self.map,attr='value')       
+                self.map[x][y].surrounding_tiles = self.GST.get(x, y, self.map)           
     def print_map(self):        
         for y in range(self.dimY):
             for x in range(self.dimX):
@@ -63,16 +73,16 @@ class Map:
                     
 
  
-my_map = Map(12, 12)
-my_map.create()
-my_map.update_map_tiles()
- 
-  
-my_map.map[1][1].value = "J"
-my_map.map[1][1].owner = "Jaap"
- 
-my_map.print_map()
- 
-print "ST:"
-print my_map.map[1][1].surrounding_tiles
+# my_map = Map(12, 12)
+# my_map.create()
+# my_map.update_map_tiles()
+# 
+#  
+# my_map.map[1][1].value = "J"
+# my_map.map[1][1].owner = "Jaap"
+# 
+# my_map.print_map()
+# 
+# print "ST:"
+# print my_map.map[1][1].surrounding_tiles
 

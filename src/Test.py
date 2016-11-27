@@ -1,14 +1,17 @@
 class Test:
-    def __init__(self,liste):
-        self.value=1
-        liste.append(self)
+    def __init__(self):
+        while True:
+            self.value=1
+            print "yeah"
+            if self.value!=1: 
+                print "fuck!"
+                break
 
 
 
 
-liste=[]
 
-zuppi=Test(liste)
+zuppi=Test()
+zuppi.value=2
 
-print liste[0].value
         

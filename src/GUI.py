@@ -41,6 +41,7 @@ class MyApp:
                 self.TileRenderer(self.map1.map[x][y])                
         
         self.map1.print_map()
+        
 
         # initialize Turn Timer
         #self.turnTimer = 0
