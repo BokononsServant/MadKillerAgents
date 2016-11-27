@@ -7,7 +7,9 @@ import random
 import time
 import Player
 import City
-import GetSurroundingTiles
+import SurroundingTiles
+import Map
+import Army
 
 class MyApp:
 
@@ -19,7 +21,7 @@ class MyApp:
         self.myContainer1.pack()
         self.myContainer2 = Frame(self.myContainer1)
         self.myContainer2.pack()
-
+ 
         self.button1 = Button(
             self.myContainer1, command=self.button1Click)  # (1)
         self.button1.configure(text="NewTurn", background="green")
@@ -27,22 +29,29 @@ class MyApp:
         self.button1.focus_force()
 
         # dimensions of the map
-        self.dimX = 14
-        self.dimY = 14
+        self.dimX = 10
+        self.dimY = 10
 
-        # generate Mapser
-        self.MapGeneration(self.dimX, self.dimY)
+        # generate Map
+        self.map1=Map.Map(self.dimX,self.dimY)
+           
+        #draw Map
+        for x in range(self.dimX):
+            for y in range(self.dimY):
+                self.TileRenderer(self.map1.map[x][y])                
+        
+        self.map1.print_map()
 
         # initialize Turn Timer
-        self.turnTimer = 0
+        #self.turnTimer = 0
 
         # initialize Players
-        self.SetUpPlayers()
+        #self.SetUpPlayers()
         
         #
-        self.B=GetSurroundingTiles.GetSurroundingTiles()
-        print self.B.GST(3,3,self.map)
-        print self.B.GST(3,4,self.map)
+        #self.B=SurroundingTiles.get()
+        #print self.B.get(3,3,self.map)
+        #print self.B.get(3,4,self.map)
         
 
         # generate starting units
@@ -111,7 +120,6 @@ class MyApp:
                 except:
                     pass
                 
-
     def MoveArmy(self, x, y, mvmtX=0, mvmtY=0, units='all', rnd=False):
         """
         Move army consits of two functions:
@@ -265,99 +273,37 @@ class MyApp:
         self.AllPlayers.append(self.player2)
         self.player3 = Player.NewPlayer(name="Barbarian", color="red")
         self.AllPlayers.append(self.player3)
-
-    def MapGeneration(self, dimX, dimY):
-        """
-        Creates a dimX x dimY Map and fills it with Tile Values
-        The map is a dimX x dimY 2D Array and each array-element contains a dictionary
-        Keys are TileValue, Tile, Owner, Army, City
-
-        """
-
+    
+    def TileRenderer(self, Tile):
+        
         self.p = PhotoImage()  # empty image needed for proper scaling of the tiles
 
         self.TileWidth = 50
         self.TileHeight = 50
-
-        # map is a dimX x dimY 2D Array and each array-element contains a
-        # dictionary
-        self.map = [[{} for y in range(dimY)] for x in range(dimX)]
-
-        for x in range(dimX):
-            for y in range(dimY):
-                self.map[x][y]["Army"] = 0
-                self.map[x][y]["City"] = " "
-                self.map[x][y]["Owner"] = " "
-                self.map[x][y]["TileValue"] = " "
-                self.map[x][y]["Tile"] = Label(self.myContainer2, relief='solid', image=self.p, height=self.TileHeight,
-                                               compound='left', width=self.TileWidth, text=self.map[x][y]["TileValue"])
-                self.map[x][y]["Tile"].grid(row=dimY - y, column=x)
-
-        prb6 = 10  # chance in % for 6
-        prb5 = 80
-        prb4 = 40
-        prb3 = 0
-        prb2 = 50
-
-        # Pass 1: Assign 6s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if random.randint(1, 100) <= prb6:
-                    self.map[x][y]["TileValue"] = 6
-                    self.map[x][y]["Tile"].configure(text=6)
-                    self.map[x][y]["Tile"].configure(bg="sienna4")
-
-        # Pass 2: Assign 5s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if self.map[x][y]["Tile"].cget("text") == " ":
-
-                    if 6 in self.SurroundingTiles(x, y) and random.randint(1, 100) <= prb5:
-                        self.map[x][y]["TileValue"] = 5
-                        self.map[x][y]["Tile"].configure(text=5)
-                        self.map[x][y]["Tile"].configure(bg="sienna3")
-
-        # pass 3: Assign 4s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if self.map[x][y]["Tile"].cget("text") == " ":
-
-                    if 5 in self.SurroundingTiles(x, y) and random.randint(1, 100) <= prb4:
-                        self.map[x][y]["TileValue"] = 4
-                        self.map[x][y]["Tile"].configure(text=4)
-                        self.map[x][y]["Tile"].configure(bg="sienna2")
-
-        # pass 4: Assign 3s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if self.map[x][y]["Tile"].cget("text") == " ":
-
-                    if 4 in self.SurroundingTiles(x, y) and random.randint(1, 100) <= prb3:
-                        self.map[x][y]["TileValue"] = 3
-                        self.map[x][y]["Tile"].configure(text=3)
-                        self.map[x][y]["Tile"].configure(bg="sienna1")
-        # pass 5: Assign 2s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if self.map[x][y]["Tile"].cget("text") == " ":
-
-                    if 3 in self.SurroundingTiles(x, y) and random.randint(1, 100) <= prb2:
-                        self.map[x][y]["TileValue"] = 2
-                        self.map[x][y]["Tile"].configure(text=2)
-                        self.map[x][y]["Tile"].configure(bg="green3")
-        # pass 6: Assign 1s
-
-        for x in range(dimX):
-            for y in range(dimY):
-                if self.map[x][y]["Tile"].cget("text") == " ":
-                    self.map[x][y]["TileValue"] = 1
-                    self.map[x][y]["Tile"].configure(text=1)
-                    self.map[x][y]["Tile"].configure(bg="green2")
+        
+        Tile.Label=Label(self.myContainer2, relief='solid', image=self.p, height=self.TileHeight,
+                                               compound='left', width=self.TileWidth)
+        
+        Tile.Label.configure(text="TV: " + str(Tile.value), anchor=N)
+        
+        try:
+            Tile.Label.configure(text="TV: " + str(Tile.value)+"\n"+
+                                "AS: " + str(Tile.Army.size), anchor=N)
+            Tile.Label.configure
+        except:
+            pass    
+        
+        if   Tile.value == 1: Tile.Label.configure(bg="green2")
+        elif Tile.value == 2: Tile.Label.configure(bg="green3")
+        elif Tile.value == 3: Tile.Label.configure(bg="sienna1")
+        elif Tile.value == 4: Tile.Label.configure(bg="sienna2")
+        elif Tile.value == 5: Tile.Label.configure(bg="sienna3")
+        elif Tile.value == 6: Tile.Label.configure(bg="sienna4")
+        
+        
+        
+        Tile.Label.grid(row=self.dimY-Tile.y, column=Tile.x)
+        
 
     def RandomMove(self):
 
@@ -380,31 +326,6 @@ class MyApp:
     def button1Click(self):  # (3)
         self.NewTurn()
 
-    def SurroundingTiles(self, x, y):
-        # Returns a list with the tile Values of the surrounding Tiles
-        ST = []
-
-        try:
-            if x > 1:  # when Array-Index is negative, Python starts counting from behind
-                ST.append(self.map[x - 1][y]["Tile"].cget("text"))
-        except:
-            pass
-        try:
-            ST.append(self.map[x + 1][y]["Tile"].cget("text"))
-        except:
-            pass
-        try:
-            ST.append(self.map[x][y + 1]["Tile"].cget("text"))
-        except:
-            pass
-        try:
-            if y > 1:  # when Array-Index is negative, Python starts counting from behind
-                ST.append(self.map[x][y - 1]["Tile"].cget("text"))
-        except:
-            pass
-
-        return ST
-    
 
 
 root = Tk()
