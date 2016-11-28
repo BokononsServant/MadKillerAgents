@@ -1,8 +1,4 @@
 from Tkinter import *
-
-#from docutils.nodes import compound
-#from pygments.styles.paraiso_dark import BACKGROUND
-
 import random
 import time
 import Player
@@ -10,7 +6,6 @@ import City
 import SurroundingTiles
 import Map
 import Army
-import Test
 
 class MyApp:
 
@@ -42,10 +37,11 @@ class MyApp:
                 self.tile_renderer(self.map1.map[x][y])           
                 
         #self.map1.print_map()
-        
+        #print self.map1.map[2][2]
+
 
         # initialize Turn Timer
-        #self.turnTimer = 0
+        self.turnTimer = 0
 
         # initialize Players
         self.SetUpPlayers()      
@@ -53,8 +49,9 @@ class MyApp:
         # generate starting units
         Army.Army(Tile=self.map1.map[2][2],owner=self.player1,units=20,MAO=self,ignore6=True)
         Army.Army(Tile=self.map1.map[2][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        self.map1.map[2][2].army.move(self.map1.map[2][1],50)
-        print self.player1.armies
+        Army.Army(Tile=self.map1.map[2][8],owner=self.player1,units=20,MAO=self,ignore6=True)
+        
+#         print self.player1.armies
         
 #         print self.player1.armies
 #         print self.map1.map[2][2]
@@ -71,40 +68,35 @@ class MyApp:
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         # start game
-        #for i in range(100):
-            # Dont use NewTurn with brackets!
-            #self.myContainer1.after(i * 400, self.NewTurn)
+        for i in range(100):
+            #Dont use NewTurn with brackets!
+            self.myContainer1.after(i * 400, self.NewTurn)
 
     def NewTurn(self):
 
-        self.BeginningOfTurn()
-        #
-        #         self.MoveArmy(1, 0, -1, 0, 'all')
-        #         self.MoveArmy(0, 0, 0, 1, 'all')
-        #         self.MoveArmy(0, 1, 0, 1, 'all')
-        
+        #self.BeginningOfTurn() 
 
-
-
-        
-
+        # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
+        LP1 = list(self.player1.armies)
+        LP2 = list(self.player2.armies)
+        LP3 = list(self.player3.armies)
+        print "List of Armies: "+str(LP1)
         # Random move
-        # make copy of List bc. otherwise the list would be updated when it is
-        LP1 = list(self.player1.ownedTiles)
-        LP2 = list(self.player2.ownedTiles)
-        LP3 = list(self.player3.ownedTiles)
-        self.turnTimer = self.turnTimer + 1
+        PT=[        [0, 1],
+            [-1, 0],        [1, 0],
+                    [0, -1]]
         
-        for T in LP1:
-            self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
-        for T in LP2:
-            self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
-        for T in LP3:
-            self.MoveArmy(x=T[0], y=T[1], units='all', rnd=True)
-            
+        gt=SurroundingTiles.get()
+        
+        for A in LP1:
+            randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
+            print "Move to: " +str(randomTile.x)+ " "+str(randomTile.y)
+            A.move(randomTile)
+            print str(A)+" : "+str(A.tile.x) +" "+str(A.tile.y)        
 
         print "Turn " + str(self.turnTimer) + " done"
-
+        self.turnTimer = self.turnTimer + 1
+        
     def BeginningOfTurn(self):
         for plyr in self.AllPlayers:
             print plyr.name
@@ -186,36 +178,25 @@ class MyApp:
                                 "AS: " + str(Tile.army.units), anchor=N)
             Tile.label.configure
         except:
-            pass    
+            pass
+        
+        try:
+            Tile.label.configure(fg=Tile.owner.color)
+        except:
+            pass
+            
         
         if   Tile.value == 1: Tile.label.configure(bg="green2")
         elif Tile.value == 2: Tile.label.configure(bg="green3")
         elif Tile.value == 3: Tile.label.configure(bg="sienna1")
         elif Tile.value == 4: Tile.label.configure(bg="sienna2")
         elif Tile.value == 5: Tile.label.configure(bg="sienna3")
-        elif Tile.value == 6: Tile.label.configure(bg="sienna4")       
+        elif Tile.value == 6: Tile.label.configure(bg="sienna4") 
+        
+              
         
         Tile.label.grid(row=self.dimY-Tile.y, column=Tile.x)
         
-
-    def RandomMove(self):
-
-        self.map[self.pos[0]][self.pos[1]].configure(bg="red")
-
-        self.move = random.choice(self.moves)
-        self.moveX = self.move[0]
-        self.moveY = self.move[1]
-
-        while self.moveX + self.pos[0] < 0 or self.moveX + self.pos[0] > self.dimX - 1 or self.moveY + self.pos[1] < 0 or self.moveY + self.pos[1] > self.dimY - 1:
-            self.move = random.choice(self.moves)
-            self.moveX = self.move[0]
-            self.moveY = self.move[1]
-
-        self.map[self.pos[0] + self.moveX][self.pos[1] +
-                                           self.moveY].configure(bg="green")
-
-        self.pos = [self.pos[0] + self.moveX, self.pos[1] + self.moveY]
-
     def button1Click(self):  # (3)
         self.NewTurn()
 

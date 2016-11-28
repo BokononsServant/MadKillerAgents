@@ -6,7 +6,6 @@
 #To do:#
 #Battle#
 #no code for cities# 
-from GUI import MyApp
 
 class Army:
     """
@@ -31,29 +30,34 @@ class Army:
         self.unit_type=unit_type
         self.units=units
         self.owner=owner
-        self.Tile=Tile  
+        self.tile=Tile  
         self.MP = 1
         self.MAO=MAO
         
         self.create()      
-        self.MAO.tile_renderer(Tile)
+        
         
     def create(self):        
         """
         If army already exists on Tile, just add units to it
-        If Tile is empty create a new army and change self.Tile.army, self.owner.armies, self.Tile.owner accordingly        
+        If Tile is empty create a new army and change self.tile.army, self.owner.armies, self.tile.owner accordingly        
         """       
         try:
-            self.Tile.army.units=self.Tile.army.units+self.units           
+            self.tile.army.units=self.tile.army.units+self.units           
         except:
-            self.Tile.army=self
+            self.tile.army=self
             self.owner.armies.append(self)
-            self.Tile.owner = self.owner           
+            self.tile.owner = self.owner
+        
+        self.MAO.tile_renderer(self.tile)           
     
     def move(self,destTile,units='all'):
         """
         
         """
+        #self.tile will later be the same as desTile, so to preserve self.Tile for rendering make temporary copy
+        tmp_Tile=self.tile
+        
         if units<=0:
             print "Can't move army: units to be moved <= 0."
             return
@@ -68,7 +72,7 @@ class Army:
         else:
             #Army will be splitted, so original army still exists, with fewer units, and a new army has to be created on the destination Tile     
             newArmy=True
-
+        
         if destTile.owner!= self.owner and destTile.owner!=None:
             self.battle(destTile)
             return        
@@ -79,10 +83,11 @@ class Army:
                 self.units=self.units-units
             except:
                 if newArmy==False:
-                    destTile.army=self
-                    self.Tile.army=None
-                    destTile.owner = self.owner
-                    self.Tile.owner = None
+                    destTile.army=self 
+                    destTile.owner=self.owner 
+                    self.tile.army = None 
+                    self.tile.owner = None 
+                    self.tile = destTile
                 if newArmy==True:
                     Army(Tile=destTile,owner=self.owner,MAO=self.MAO,units=units)
                     self.units=self.units-units              
@@ -90,14 +95,14 @@ class Army:
         if self.units<=0:
             self.destroy()
         
-        self.MAO.tile_renderer(self.Tile)
+        self.MAO.tile_renderer(tmp_Tile)
         self.MAO.tile_renderer(destTile)
             
     def destroy(self):
-        #print "Army destroyed on Tile %s %s" %(self.Tile.x,self.Tile.y)
-        self.owner.armies.remove(self.Tile.army)               
-        self.Tile.army=None
-        self.Tile.owner = None
+        #print "Army destroyed on Tile %s %s" %(self.tile.x,self.tile.y)
+        self.owner.armies.remove(self.tile.army)               
+        self.tile.army=None
+        self.tile.owner = None
 
     def battle(self,destTile):
         pass

@@ -1,11 +1,5 @@
-class Test:
-    def __init__(self,a):
-        a=5
-    def newInstance(self):
-        pass
-        
+from SurroundingTiles import get
 
+a=get()
+print a.get(1,2,"map")
 
-
-b=Test(4)
-b.newInstance()
