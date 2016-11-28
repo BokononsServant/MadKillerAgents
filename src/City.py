@@ -1,3 +1,4 @@
+#Out of date!#
 cnt=0
 
 class newCity:
@@ -39,26 +40,7 @@ class newCity:
                 
 
         
-#     def addXY(self,T1,T2):
-#         """
-#         add two coordinates [1,1] + [2,3] = [3,4]
-#         """
-#         if len(T1)!=2 or len(T2)!=2:
-#             print "Error: Not coordinates! Array length !=2!"
-#             return "Error: Not coordinates! Array length !=2!"
-#         else:
-#             try:
-#                 T1[0]+1
-#                 T1[1]+1
-#                 T2[0]+1
-#                 T2[1]+1
-#             except:
-#                 print "Error: Not coordinates! Array Elements not integers!"
-#                 return "Error: Not coordinates! Array Elements not integers!"
-#             
-#             T=[T1[0]+T2[0],T1[1]+T2[1]]
-#             return T
-        
+
             
 
 

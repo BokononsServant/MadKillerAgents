@@ -6,8 +6,8 @@ class Tile:
         self.value = value
         self.owner = None
         self.surrounding_tiles = []
-        self.Label = None
-        self.Army = None
-        self.City = None
+        self.label = None
+        self.army = None
+        self.city = None
 
 

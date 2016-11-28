@@ -7,7 +7,7 @@ class Map:
         """
         If instatiated this class will generate a Map object with the specified dimensions.
         The map is a 2D array, and every array field contains a Tile object.
-        For the tile object the following fields are set:
+        For each tile object the following fields are set:
             'value' gets assigned according to the used algorithm
             'surrounding_tiles" gets a list containing the 8 immediately adjacent Tiles
         To print the map to the console use print_map.
@@ -70,6 +70,7 @@ class Map:
             for x in range(self.dimX):
                 print self.map[x][self.dimY-1-y].value,
                 if x == self.dimX-1: print "\n"
+        
                     
 
  

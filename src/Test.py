@@ -1,17 +1,11 @@
 class Test:
-    def __init__(self):
-        while True:
-            self.value=1
-            print "yeah"
-            if self.value!=1: 
-                print "fuck!"
-                break
-
-
-
-
-
-zuppi=Test()
-zuppi.value=2
-
+    def __init__(self,a):
+        a=5
+    def newInstance(self):
+        pass
         
+
+
+
+b=Test(4)
+b.newInstance()
