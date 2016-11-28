@@ -1,6 +1,5 @@
 from Tkinter import *
 import random
-import time
 import Player
 import City
 import SurroundingTiles
@@ -47,10 +46,16 @@ class MyApp:
         self.SetUpPlayers()      
 
         # generate starting units
-        Army.Army(Tile=self.map1.map[2][2],owner=self.player1,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[2][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[2][8],owner=self.player1,units=20,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[2][2],owner=self.player1,units=30,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
         
+        
+        
+        #self.player1.armies[0].move(self.map1.map[2][1],30)
 #         print self.player1.armies
         
 #         print self.player1.armies
@@ -68,19 +73,22 @@ class MyApp:
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         # start game
-        for i in range(100):
+        for i in range(200):
             #Dont use NewTurn with brackets!
-            self.myContainer1.after(i * 400, self.NewTurn)
+            #self.myContainer1.after(i * 0, self.NewTurn)
+            self.NewTurn()
+            
+        
 
     def NewTurn(self):
 
         #self.BeginningOfTurn() 
 
         # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
-        LP1 = list(self.player1.armies)
-        LP2 = list(self.player2.armies)
-        LP3 = list(self.player3.armies)
-        print "List of Armies: "+str(LP1)
+#         LP1 = list(self.player1.armies)
+#         LP2 = list(self.player2.armies)
+#         LP3 = list(self.player3.armies)
+
         # Random move
         PT=[        [0, 1],
             [-1, 0],        [1, 0],
@@ -88,14 +96,17 @@ class MyApp:
         
         gt=SurroundingTiles.get()
         
-        for A in LP1:
-            randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
-            print "Move to: " +str(randomTile.x)+ " "+str(randomTile.y)
-            A.move(randomTile)
-            print str(A)+" : "+str(A.tile.x) +" "+str(A.tile.y)        
-
+        for P in self.AllPlayers:
+            LP= list(P.armies)
+            print P.name+" : "+str(LP)         
+            for A in LP:
+                randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
+                A.move(randomTile)
+    
         print "Turn " + str(self.turnTimer) + " done"
         self.turnTimer = self.turnTimer + 1
+        
+        
         
     def BeginningOfTurn(self):
         for plyr in self.AllPlayers:

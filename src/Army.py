@@ -74,7 +74,8 @@ class Army:
             newArmy=True
         
         if destTile.owner!= self.owner and destTile.owner!=None:
-            self.battle(destTile)
+            #print "Battle not yet implemented"
+            self.battle(destTile,units)
             return        
         else:
             try:
@@ -103,8 +104,54 @@ class Army:
         self.owner.armies.remove(self.tile.army)               
         self.tile.army=None
         self.tile.owner = None
+        self.MAO.tile_renderer(self.tile)
 
-    def battle(self,destTile):
-        pass
-    
+    def battle(self,destTile,units):
+        """
+        First determine outcome of battle and remove armies, then try to move again
+        """
+        tmp_tile=self.tile
+        tmp_destTile=destTile
 
+        print "Battle for tile %s %s !"%(destTile.x,destTile.y)
+
+        attackerUnits = units
+        defenderUnits = destTile.army.units
+        attacker = self.owner.color
+        defender = destTile.owner.color
+        
+        defenderArmor = destTile.value
+
+        print attacker + " has " + str(attackerUnits) + " units against " + defender + "\'s " + str(defenderUnits) + " units"
+        print defender + " fights on " + str(defenderArmor)
+
+        if attackerUnits < defenderUnits + defenderArmor:
+            # if attacker has less units than defender+TV he looses all his attacking units
+            self.units=self.units-attackerUnits
+        else:
+            # if attacker has equal or more units than defender he looses units
+            # equal to the amount of defending units+TV
+            self.units=self.units-(defenderUnits+defenderArmor)
+        
+        #defender looses units equal to the attacking units minus defenderArmor
+        #<=0 check necessary, or (attackerUnits - defenderArmor) below will evalute to a positive number, increasing the defenders units
+        if attackerUnits-defenderArmor<=0: pass
+        else: destTile.army.units=destTile.army.units-(attackerUnits - defenderArmor)
+
+        #if one of the armies has less or equal to zero units, destroy it
+        if self.units <=0 and destTile.army.units<=0:
+            print "Mutual Destruction! Both players lost all their units!"
+            self.destroy()
+            destTile.army.destroy()        
+        elif self.units <=0:
+            print "%s defends [%s,%s] succesfully against %s's %s units and has %s units left!"%(defender,destTile.x, destTile.y,attacker, attackerUnits, destTile.army.units)            
+            self.destroy()
+        elif destTile.army.units<=0: 
+            print "%s attacks succesfully with %s against %s's %s units and moves with %s units onto %s %s!"%(attacker,attackerUnits,defender, defenderUnits,attackerUnits-(defenderUnits+defenderArmor),destTile.x, destTile.y)
+            destTile.army.destroy()
+            self.move(destTile,attackerUnits-(defenderUnits+defenderArmor))
+        else:
+            print "Impasse! %s has %s units left, %s has %s units left!"%(attacker,self.units,defender,destTile.army.units)
+        
+        self.MAO.tile_renderer(tmp_tile)
+        self.MAO.tile_renderer(tmp_destTile)
