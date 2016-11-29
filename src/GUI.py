@@ -47,12 +47,13 @@ class MyApp:
 
         # generate starting units
         Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[2][2],owner=self.player1,units=30,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[2][2],owner=self.player2,units=30,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-        
+        City.City(self.player1,self.map1.map[2][3],self) #Not working!
+        self.map1.map[2][2].army.move(self.map1.map[2][3])
         
         
         #self.player1.armies[0].move(self.map1.map[2][1],30)
@@ -62,23 +63,30 @@ class MyApp:
 #         print self.map1.map[2][2]
         
         # generate starting cities
-        City.City(self.player1,self.map1.map[2][3],self)
+        
 
+        
 
-
-
+        sim=False
+        
         #self.CreateCity(self.player1, 0, 1)
         
         #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
         #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
         #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
         # start game
-        for i in range(200):
+        #for i in range(200):
             #Dont use NewTurn with brackets!
-            self.myContainer1.after(i * 600, self.NewTurn)
+            #self.myContainer1.after(i * 600, self.NewTurn)
             #self.NewTurn()
+        if sim==True: self.simulation() 
             
-        
+    def simulation(self):
+            for i in range(200):
+            #Dont use NewTurn with brackets!
+                self.myContainer1.after(i * 600, self.NewTurn)
+                self.NewTurn()
+            
 
     def NewTurn(self):
 

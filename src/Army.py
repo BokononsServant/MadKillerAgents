@@ -71,10 +71,7 @@ class Army:
         if destTile.owner!= self.owner and destTile.owner!=None:
             self.battle(destTile,units)
             return     
-        
-        if destTile.city != None and destTile.owner != self.owner:
-            print "Can't move army: City combat not yet implemented!"
-           
+         
         else:
             try:
                 #if there is already an own army on the destination Tile, units are transferred. If all units are transferred the original army will later be destroyed
@@ -108,6 +105,13 @@ class Army:
         """
         add documentation
         """
+        if destTile.army == None and destTile.city==None:
+            print "Can't do battle: No hostile army or city on contested tile!"
+        #special case: attacking empty city
+        if destTile.army == None and destTile.city != None and destTile.owner != self.owner:
+            Army(destTile,destTile.owner,self.MAO,1)
+            print "Emergency draft! 1 unit created in city %s"%(destTile.city.name)           
+        
         tmp_tile=self.tile
         tmp_destTile=destTile
 
@@ -119,7 +123,7 @@ class Army:
         defender = destTile.owner.color
         
         defenderArmor = destTile.value
-
+               
         print attacker + " has " + str(attackerUnits) + " units against " + defender + "\'s " + str(defenderUnits) + " units"
         print defender + " fights on " + str(defenderArmor)
 
@@ -135,7 +139,7 @@ class Army:
         #<=0 check necessary, or (attackerUnits - defenderArmor) below will evalute to a positive number, increasing the defenders units
         if attackerUnits-defenderArmor<=0: pass
         else: destTile.army.units=destTile.army.units-(attackerUnits - defenderArmor)
-
+        
         #if one of the armies has less or equal to zero units, destroy it
         if self.units <=0 and destTile.army.units<=0:
             print "Mutual Destruction! Both players loose all their units!"
@@ -144,10 +148,16 @@ class Army:
         elif self.units <=0:
             print "%s defends [%s,%s] succesfully against %s's %s units and has %s units left!"%(defender,destTile.x, destTile.y,attacker, attackerUnits, destTile.army.units)            
             self.destroy()
-        elif destTile.army.units<=0: 
-            print "%s attacks succesfully with %s against %s's %s units and moves with %s units onto %s %s!"%(attacker,attackerUnits,defender, defenderUnits,attackerUnits-(defenderUnits+defenderArmor),destTile.x, destTile.y)
+        elif destTile.army.units<=0:
+            if destTile.city!=None:
+                destTile.city.pop=destTile.city.pop+destTile.army.units
+                if destTile.city.pop<=0:
+                    print "City %s destroyed by %s!"%(destTile.city.name,attacker)
+                    destTile.city.destroy()                             
             destTile.army.destroy()
-            self.move(destTile,attackerUnits-(defenderUnits+defenderArmor))
+            if destTile.city != None:
+                print "%s attacks succesfully with %s against %s's %s units and moves with %s units onto %s %s!"%(attacker,attackerUnits,defender, defenderUnits,attackerUnits-(defenderUnits+defenderArmor),destTile.x, destTile.y)
+                self.move(destTile,attackerUnits-(defenderUnits+defenderArmor))
         else:
             print "Impasse! %s has %s units left, %s has %s units left!"%(attacker,self.units,defender,destTile.army.units)
         
