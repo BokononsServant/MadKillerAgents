@@ -1,42 +1,39 @@
-#Out of date!#
+from SurroundingTiles import get
 cnt=0
 
-class newCity:
+class City:
     
-    def __init__(self,plyr,x,y,map):
-        #if x<0 or y<0 or x>map.
-        global cnt        
-        self.name = plyr.name[:2]+str(cnt)        
+    def __init__(self,owner,Tile,MAO): 
+        if Tile.city != None:
+            print "Can't found city: City already present!"
+            return
+        if Tile.owner!=owner and Tile.owner !=None:
+            print "Can't found city: Tile belongs to another player!"
+            return
+               
+        global cnt
         cnt=cnt+1
-        self.pos=[x,y]
+        self.owner = owner      
+        self.name = owner.name[:2]+str(cnt)       
+        self.tile=Tile
+        self.tile.city=self
+        self.owner.cities.append(self)
         self.pop=1
-        map[x][y]['Owner']=plyr
-        map[x][y]['Tile'].configure(text="TV: "+str(map[x][y]["TileValue"])+"\n"+"AS: "+str(map[x][y]["Army"])+"\n"+self.name+": "+str(self.pop))
-        map[x][y]['Tile'].configure(fg=plyr.color)
-        plyr.ownedTiles.append([x,y])
-        plyr.cities.append([x,y])
-        self.FirstRing(x,y,map)
+        gt=get()
+        self.first_ring=gt.get(self.tile.x,self.tile.y,MAO.map1)
+        self.MAO=MAO
+        MAO.tile_renderer(self.tile)
+    
+    def destroy(self):
+        tmp_tile=self.tile
+        self.tile.city=None
+        self.owner.cities.remove(self)
+        self.MAO.tile_renderer(tmp_tile)
         
-    def FirstRing(self,x,y,map):
+
         
-        self.SurroundingTilesValues=[]
         
-        #PT=possible Tiles
-        
-        PT=[[-1,1 ],[0, 1],[1,1],
-            [-1,0 ],       [1,0],
-            [-1,-1],[0,-1],[1,-1]]
-        
-        for t in PT:
-            
-            try: 
-                if x+t[0]>=0 and y+t[1]>=0:
-                    if map[x+t[0]][y+t[1]]['TileValue'] == 0: pass
-                    else:
-                        self.SurroundingTilesValues.append(map[x+t[0]][y+t[1]]['TileValue'])
-                        self.SurroundingTilesValues.sort(reverse=True)
-            except:
-                pass
+
                 
 
         

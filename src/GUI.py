@@ -48,10 +48,10 @@ class MyApp:
         # generate starting units
         Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
         Army.Army(Tile=self.map1.map[2][2],owner=self.player1,units=30,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
         
         
         
@@ -62,10 +62,10 @@ class MyApp:
 #         print self.map1.map[2][2]
         
         # generate starting cities
+        City.City(self.player1,self.map1.map[2][3],self)
 
-#         self.CreateCity(self.player1, 10, 10)
-#         self.CreateCity(self.player2, 5, 5)
-#         self.CreateCity(self.player3, 1, 1)
+
+
 
         #self.CreateCity(self.player1, 0, 1)
         
@@ -75,8 +75,8 @@ class MyApp:
         # start game
         for i in range(200):
             #Dont use NewTurn with brackets!
-            #self.myContainer1.after(i * 0, self.NewTurn)
-            self.NewTurn()
+            self.myContainer1.after(i * 600, self.NewTurn)
+            #self.NewTurn()
             
         
 
@@ -184,12 +184,16 @@ class MyApp:
         
         Tile.label.configure(text="TV: " + str(Tile.value), anchor=N)
         
-        try:
+        if Tile.army != None and Tile.city == None:
             Tile.label.configure(text="TV: " + str(Tile.value)+"\n"+
                                 "AS: " + str(Tile.army.units), anchor=N)
-            Tile.label.configure
-        except:
-            pass
+        if Tile.army == None and Tile.city != None:
+            Tile.label.configure(text="TV: " + str(Tile.value)+"\n"+
+                                 Tile.city.name+": "+str(Tile.city.pop), anchor=N)
+        if Tile.army != None and Tile.city != None:
+            Tile.label.configure(text="TV: " + str(Tile.value)+"\n"+
+                                "AS: " + str(Tile.army.units)+"\n"+
+                                Tile.city.name+": "+str(Tile.city.pop), anchor=N)            
         
         try:
             Tile.label.configure(fg=Tile.owner.color)
@@ -202,10 +206,8 @@ class MyApp:
         elif Tile.value == 3: Tile.label.configure(bg="sienna1")
         elif Tile.value == 4: Tile.label.configure(bg="sienna2")
         elif Tile.value == 5: Tile.label.configure(bg="sienna3")
-        elif Tile.value == 6: Tile.label.configure(bg="sienna4") 
-        
+        elif Tile.value == 6: Tile.label.configure(bg="sienna4")         
               
-        
         Tile.label.grid(row=self.dimY-Tile.y, column=Tile.x)
         
     def button1Click(self):  # (3)

@@ -1,10 +1,5 @@
 #WORK IN PROGRESS!#
-#init works!#
-#move works!#
-#create works!#
-#destroy works!#
 #To do:#
-#Battle#
 #no code for cities# 
 
 class Army:
@@ -53,7 +48,7 @@ class Army:
     
     def move(self,destTile,units='all'):
         """
-        
+        add documentation
         """
         #self.tile will later be the same as desTile, so to preserve self.Tile for rendering make temporary copy
         tmp_Tile=self.tile
@@ -74,9 +69,12 @@ class Army:
             newArmy=True
         
         if destTile.owner!= self.owner and destTile.owner!=None:
-            #print "Battle not yet implemented"
             self.battle(destTile,units)
-            return        
+            return     
+        
+        if destTile.city != None and destTile.owner != self.owner:
+            print "Can't move army: City combat not yet implemented!"
+           
         else:
             try:
                 #if there is already an own army on the destination Tile, units are transferred. If all units are transferred the original army will later be destroyed
@@ -108,7 +106,7 @@ class Army:
 
     def battle(self,destTile,units):
         """
-        First determine outcome of battle and remove armies, then try to move again
+        add documentation
         """
         tmp_tile=self.tile
         tmp_destTile=destTile
@@ -140,7 +138,7 @@ class Army:
 
         #if one of the armies has less or equal to zero units, destroy it
         if self.units <=0 and destTile.army.units<=0:
-            print "Mutual Destruction! Both players lost all their units!"
+            print "Mutual Destruction! Both players loose all their units!"
             self.destroy()
             destTile.army.destroy()        
         elif self.units <=0:
