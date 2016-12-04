@@ -6,7 +6,7 @@ class Map:
     def __init__(self, dimX, dimY):
         """
         If instatiated this class will generate a Map object with the specified dimensions.
-        The map is a 2D array, and every array field contains a Tile object.
+        The map is a 2D array, and every array field contains a tile object.
         For each tile object the following fields are set:
             'value' gets assigned according to the used algorithm
             'surrounding_tiles" gets a list containing the 8 immediately adjacent Tiles
@@ -74,16 +74,5 @@ class Map:
                     
 
  
-# my_map = Map(12, 12)
-# my_map.create()
-# my_map.update_map_tiles()
-# 
-#  
-# my_map.map[1][1].value = "J"
-# my_map.map[1][1].owner = "Jaap"
-# 
-# my_map.print_map()
-# 
-# print "ST:"
-# print my_map.map[1][1].surrounding_tiles
+
 

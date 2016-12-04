@@ -82,7 +82,7 @@ class Army:
                     destTile.army=self 
                     destTile.owner=self.owner 
                     self.tile.army = None 
-                    self.tile.owner = None 
+                    if self.tile.city == None: self.tile.owner = None 
                     self.tile = destTile
                 if newArmy==True:
                     Army(Tile=destTile,owner=self.owner,MAO=self.MAO,units=units)
@@ -90,6 +90,7 @@ class Army:
                  
         if self.units<=0:
             self.destroy()
+        
         
         self.MAO.tile_renderer(tmp_Tile)
         self.MAO.tile_renderer(destTile)

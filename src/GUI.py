@@ -33,12 +33,8 @@ class MyApp:
         #draw Map
         for x in range(self.dimX):
             for y in range(self.dimY):
-                self.tile_renderer(self.map1.map[x][y])           
+                self.tile_renderer(self.map1.map[x][y])          
                 
-        #self.map1.print_map()
-        #print self.map1.map[2][2]
-
-
         # initialize Turn Timer
         self.turnTimer = 0
 
@@ -46,16 +42,16 @@ class MyApp:
         self.SetUpPlayers()      
 
         # generate starting units
-        Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[2][2],owner=self.player2,units=30,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[2][2],owner=self.player2,units=30,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-        City.City(self.player1,self.map1.map[2][3],self) #Not working!
-        self.map1.map[2][2].army.move(self.map1.map[2][3])
-        
-        
+        City.City(self.player1,self.map1.map[1][1],self)
+        City.City(self.player2,self.map1.map[8][8],self)
+        #self.player1.cities[0].pop=9
+        #self.tile_renderer(self.map1.map[2][3])
         #self.player1.armies[0].move(self.map1.map[2][1],30)
 #         print self.player1.armies
         
@@ -63,11 +59,8 @@ class MyApp:
 #         print self.map1.map[2][2]
         
         # generate starting cities
-        
 
-        
-
-        sim=False
+        sim=True
         
         #self.CreateCity(self.player1, 0, 1)
         
@@ -85,9 +78,12 @@ class MyApp:
             for i in range(200):
             #Dont use NewTurn with brackets!
                 self.myContainer1.after(i * 600, self.NewTurn)
-                self.NewTurn()
+                
+    
+    def passs(self):
+        pass
             
-
+    
     def NewTurn(self):
 
         #self.BeginningOfTurn() 
@@ -103,8 +99,9 @@ class MyApp:
                     [0, -1]]
         
         gt=SurroundingTiles.get()
-        
+              
         for P in self.AllPlayers:
+            self.BeginningOfTurn(P)
             LP= list(P.armies)
             print P.name+" : "+str(LP)         
             for A in LP:
@@ -113,60 +110,21 @@ class MyApp:
     
         print "Turn " + str(self.turnTimer) + " done"
         self.turnTimer = self.turnTimer + 1
+        print self.map1.map[2][3].owner
         
         
-        
-    def BeginningOfTurn(self):
-        for plyr in self.AllPlayers:
-            print plyr.name
-            for cty in plyr.cities:
-                try:
-                    producedArmies=0
-                    for i in range(cty.pop):
-                        producedArmies=producedArmies+cty.SurroundingTilesValues[i]
-                    
-                    self.CreateArmy(plyr, cty.pos[0], cty.pos[1], size=producedArmies, ignore6=True)
-                except:
-                    pass                
-
-    def CreateCity(self, plyr, x, y):
-
-        tmp = City.newCity(plyr, x, y, map=self.map)
-
-        plyr.cities.append(tmp)
-        if self.map[x][y]['City'] == " ":
-            self.map[x][y]['City'] = tmp
-
-    def Battle(self, x, y, mvmtX, mvmtY, units):
-
-        print "Battle for tile " + str(x + mvmtX) + " " + str(y + mvmtY)
-
-        attackerUnits = units
-        defenderUnits = self.map[x + mvmtX][y + mvmtY]["Army"]
-        attacker = self.map[x][y]["Owner"].name
-        defender = self.map[x + mvmtX][y + mvmtY]["Owner"].name
-        # attackerArmor=self.map[x][y]["TileValue"]
-        defenderArmor = self.map[x + mvmtX][y + mvmtY]["TileValue"]
-
-        print attacker + " has " + str(attackerUnits) + " units against " + defender + "\'s " + str(defenderUnits) + " units"
-        print defender + " fights on " + str(defenderArmor)
-
-        if attackerUnits < defenderUnits + defenderArmor:
-            # if attacker has less units than defender+TV he looses all his
-            # attacking units
-            self.RemoveArmy(x, y, attackerUnits)
-        else:
-            # if attacker has equal or more units than defender he looses units
-            # equal to the amount of defending units+TV
-            self.RemoveArmy(x, y, defenderUnits + defenderArmor)
-
-        self.RemoveArmy(x + mvmtX, y + mvmtY, attackerUnits - defenderArmor)
-
-        if self.map[x][y]["Army"] > 0 and self.map[x + mvmtX][y + mvmtY]['Army'] <= 0:
-            self.MoveArmy(x, y, mvmtX, mvmtY, units)
-            print attacker + " wins " + str(self.map[x][y]["Army"]) + " : " + str(self.map[x + mvmtX][y + mvmtY]["Army"])
-        else:
-            print defender + " wins " + str(self.map[x][y]["Army"]) + " : " + str(self.map[x + mvmtX][y + mvmtY]["Army"])
+    def BeginningOfTurn(self,plyr):        
+            
+        gt=SurroundingTiles.get()
+        for cty in plyr.cities:
+            producedArmies=0
+            try:                
+                for i in range(cty.pop):
+                    producedArmies=producedArmies+sorted(gt.get(cty.tile.x,cty.tile.y,self.map1.map,attr='value'),reverse=True)[i]
+            except:
+                pass    
+         
+            Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
 
     def SetUpPlayers(self):
 

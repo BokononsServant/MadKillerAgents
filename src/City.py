@@ -16,6 +16,7 @@ class City:
         self.owner = owner      
         self.name = owner.name[:2]+str(cnt)       
         self.tile=Tile
+        self.tile.owner=self.owner
         self.tile.city=self
         self.owner.cities.append(self)
         self.pop=1
