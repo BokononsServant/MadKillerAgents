@@ -1,6 +1,5 @@
-#WORK IN PROGRESS!#
-#To do:#
-#no code for cities# 
+import math
+import City
 
 class Army:
     """
@@ -29,7 +28,15 @@ class Army:
         self.MP = 1
         self.MAO=MAO
         
-        self.create()      
+        """
+        Costs of special moves
+        """
+        
+        self.cost_build_city=20
+        self.cost_grow_city=5
+
+        self.create()  
+            
         
         
     def create(self):        
@@ -156,7 +163,7 @@ class Army:
                     print "City %s destroyed by %s!"%(destTile.city.name,attacker)
                     destTile.city.destroy()                             
             destTile.army.destroy()
-            if destTile.city != None:
+            if destTile.city == None:
                 print "%s attacks succesfully with %s against %s's %s units and moves with %s units onto %s %s!"%(attacker,attackerUnits,defender, defenderUnits,attackerUnits-(defenderUnits+defenderArmor),destTile.x, destTile.y)
                 self.move(destTile,attackerUnits-(defenderUnits+defenderArmor))
         else:
@@ -164,3 +171,39 @@ class Army:
         
         self.MAO.tile_renderer(tmp_tile)
         self.MAO.tile_renderer(tmp_destTile)
+        
+    def build_city(self):
+        
+        """
+        The cost for growing citys is dependent on the Fibonacci numbers:
+        base_cost+fib(n) where n is city population.
+        With a base cost of 5 this would be: 6 7 8 10 13 18 26 39 etc.
+        """
+         
+        tmp_tile=self.tile       
+        if self.tile.city == None:
+            if self.units<self.cost_build_city:
+                print "Can't build city! Not enough units!"
+                return
+            else:             
+                City.City(self.owner,self.tile,self.MAO)
+                self.units=self.units-self.cost_build_city    
+                print "City %s built on tile %s %s!"%(self.tile.city.name,self.tile.x, self.tile.y)        
+
+        elif self.units > self.fib(self.tile.city.pop)+5:
+            print "%s grows from size %s to %s!"%(self.tile.city.name,self.tile.city.pop,self.tile.city.pop+1)
+            self.tile.city.pop=self.tile.city.pop+1
+            self.units=self.units-(self.fib(self.tile.city.pop)+5)
+        
+        if self.units<=0: self.destroy()
+        
+        self.MAO.tile_renderer(tmp_tile)
+
+    def fib(self,n):
+        Phi=(1+math.sqrt(5))/2
+        phi=(1-math.sqrt(5))/2
+        return int((Phi**n-phi**n)/math.sqrt(5))
+    
+        
+        
+        

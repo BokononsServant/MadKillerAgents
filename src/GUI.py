@@ -42,14 +42,13 @@ class MyApp:
         self.SetUpPlayers()      
 
         # generate starting units
-#         Army.Army(Tile=self.map1.map[4][4],owner=self.player1,units=30,MAO=self,ignore6=True)
-#         Army.Army(Tile=self.map1.map[2][2],owner=self.player2,units=30,MAO=self,ignore6=True)
-#         Army.Army(Tile=self.map1.map[0][0],owner=self.player2,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-        City.City(self.player1,self.map1.map[1][1],self)
-        City.City(self.player2,self.map1.map[8][8],self)
+
         #self.player1.cities[0].pop=9
         #self.tile_renderer(self.map1.map[2][3])
         #self.player1.armies[0].move(self.map1.map[2][1],30)
@@ -59,25 +58,27 @@ class MyApp:
 #         print self.map1.map[2][2]
         
         # generate starting cities
+        City.City(self.player1,self.map1.map[1][1],self)
+        City.City(self.player2,self.map1.map[4][4],self)
+        City.City(self.player3,self.map1.map[8][8],self)
 
-        sim=True
         
-        #self.CreateCity(self.player1, 0, 1)
         
-        #self.CreateArmy(self.player1, x=3, y=6, size=20,ignore6=True)
-        #self.CreateArmy(self.player2, self.dimX-1, self.dimY-1, 20)
-        #self.CreateArmy(self.player3, int((self.dimX)/2),int( (self.dimY-1)/2), 20)
+        
+        
         # start game
-        #for i in range(200):
-            #Dont use NewTurn with brackets!
-            #self.myContainer1.after(i * 600, self.NewTurn)
-            #self.NewTurn()
-        if sim==True: self.simulation() 
+        sim=True
+        if sim: self.simulation() 
+        
+        for x in range(self.dimX):
+            for y in range(self.dimY):
+                self.tile_renderer(self.map1.map[x][y],simulation=False)   
             
     def simulation(self):
             for i in range(200):
             #Dont use NewTurn with brackets!
-                self.myContainer1.after(i * 600, self.NewTurn)
+                #self.myContainer1.after(i * 600, self.NewTurn)
+                self.NewTurn()
                 
     
     def passs(self):
@@ -106,7 +107,10 @@ class MyApp:
             print P.name+" : "+str(LP)         
             for A in LP:
                 randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
-                A.move(randomTile)
+                if random.choice([True,False]):
+                    A.build_city()
+                else:
+                    A.move(randomTile)
     
         print "Turn " + str(self.turnTimer) + " done"
         self.turnTimer = self.turnTimer + 1
@@ -120,7 +124,7 @@ class MyApp:
             producedArmies=0
             try:                
                 for i in range(cty.pop):
-                    producedArmies=producedArmies+sorted(gt.get(cty.tile.x,cty.tile.y,self.map1.map,attr='value'),reverse=True)[i]
+                    producedArmies=producedArmies+sorted(gt.get(cty.tile.x,cty.tile.y,self.map1.map,attr='value'),reverse=True)[i]+cty.tile.value
             except:
                 pass    
          
@@ -136,9 +140,9 @@ class MyApp:
         self.player3 = Player.NewPlayer(name="Barbarian", color="red")
         self.AllPlayers.append(self.player3)
     
-    def tile_renderer(self, Tile):
+    def tile_renderer(self, Tile, simulation=True):
         
-        if Tile == None:return
+        if Tile == None or simulation==True:return
         
         self.p = PhotoImage()  # empty image needed for proper scaling of the tiles
 
