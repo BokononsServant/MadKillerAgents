@@ -6,6 +6,7 @@ import SurroundingTiles
 import Map
 import Army
 import tkMessageBox
+import TileSelection
 
 class MyApp:
 
@@ -23,7 +24,7 @@ class MyApp:
         self.button1.configure(text="NewTurn", background="green")
         self.button1.pack(side=LEFT)
         self.button1.focus_force()
-
+        
         # dimensions of the map
         self.dimX = 10
         self.dimY = 10
@@ -43,24 +44,21 @@ class MyApp:
         self.SetUpPlayers()      
 
         # generate starting units
-        Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
+#         Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 
         # generate starting cities
-#        City.City(self.player1,self.map1.map[1][1],self)
-#        City.City(self.player2,self.map1.map[4][4],self)
-#        City.City(self.player3,self.map1.map[8][8],self)
-
-        
-
-
-
+        City.City(self.player1,self.map1.map[1][1],self)
+        City.City(self.player2,self.map1.map[4][4],self)
+        City.City(self.player3,self.map1.map[8][8],self)
 
         # start game
+        
+        self.NewTurn()
         sim=False
         if sim: self.simulation() 
         
@@ -75,9 +73,19 @@ class MyApp:
                 self.NewTurn()
 
     def NewTurn(self):
+        self.BeginningOfTurn(self.active_player)
+        try:            
+            self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
+            print self.active_player.name
+        except:                      
+            self.active_player=self.AllPlayers[0]
+            print self.active_player.name
+            
+        
 
-        #self.BeginningOfTurn() 
-
+            
+        
+        return
         # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
 #         LP1 = list(self.player1.armies)
 #         LP2 = list(self.player2.armies)
@@ -101,17 +109,19 @@ class MyApp:
                 else:
                     A.move(randomTile)
         
+        # redraw entire map
         for x in range(self.dimX):
             for y in range(self.dimY):
                 self.tile_renderer(self.map1.map[x][y])    
         
+        
+        # advance turn timer
         print "Turn " + str(self.turnTimer) + " done"
         self.turnTimer = self.turnTimer + 1
 
         
         
     def BeginningOfTurn(self,plyr):        
-            
         gt=SurroundingTiles.get()
         for cty in plyr.cities:
             producedArmies=0
@@ -133,6 +143,8 @@ class MyApp:
         self.AllPlayers.append(self.player2)
         self.player3 = Player.NewPlayer(name="Barbarian", color="red")
         self.AllPlayers.append(self.player3)
+        
+        self.active_player=self.player1
     
     def tile_renderer(self, Tile, simulation=False):
         
@@ -171,13 +183,16 @@ class MyApp:
         elif Tile.value == 4: Tile.label.configure(bg="sienna2")
         elif Tile.value == 5: Tile.label.configure(bg="sienna3")
         elif Tile.value == 6: Tile.label.configure(bg="sienna4")         
-              
+        
+        Tile.label.bind("<Button-1>",self.call_tile_selection)      
         Tile.label.grid(row=self.dimY-Tile.y, column=Tile.x)
         
     def button1Click(self):  # (3)
         self.NewTurn()
 
-
+    def call_tile_selection(self,event):
+        TileSelection.TileSelection(event.widget,self)
+        
 if __name__ == "__main__":
     root = Tk()
     myapp = MyApp(root)

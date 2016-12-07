@@ -1,15 +1,12 @@
-import math
-import random
-import Tile
+class Test():
+    def __init__(self):
+        self.a="sdfg"
 
-a=Tile.Tile(2,2,5)
+lst =[]
+for i in range(10):
+    lst.append(Test())
+    
 
-print isinstance(a, Tile.Tile)
-
-PT = [
-     [-2,2],  [-1, 2], [0, 2], [1, 2], [2,2],
-     [-2,1],  [-1, 1], [0, 1], [1, 1], [2,1],
-     [-2,0],  [-1, 0],         [1, 0], [2,0],
-     [-2,-1], [-1, -1],[0, -1],[1, -1],[2,-1],
-     [-2,-2], [-1, -2],[0, -2],[1, -2],[2,-2]
-     ]
+p=lst[5]
+print p
+print p in lst

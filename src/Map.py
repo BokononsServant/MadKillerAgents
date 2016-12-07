@@ -24,31 +24,31 @@ class Map:
         prb6 = 10  # chance in % for 6
         prb5 = 80
         prb4 = 40
-        prb3 = 0
-        prb2 = 50
+        prb3 = 30
+        prb2 = 70
         # Pass 1: Assign 6s
         for x in range(self.dimX):
             for y in range(self.dimY):
-                if random.randint(1, 100) <= prb6:
-                    self.map[x][y] = Tile(x, y, 6)
-        # Pass 2: Assign 5s
-        for x in range(self.dimX):
-            for y in range(self.dimY):
-                if self.map[x][y] is None:
-                    if 6 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb5:
-                        self.map[x][y] = Tile(x, y, 5)
-        # pass 3: Assign 4s
-        for x in range(self.dimX):
-            for y in range(self.dimY):
-                if self.map[x][y] is None:
-                    if 5 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb4:
-                        self.map[x][y] = Tile(x, y, 4)
-        # pass 4: Assign 3s
-        for x in range(self.dimX):
-            for y in range(self.dimY):
-                if self.map[x][y] is None:
-                    if 4 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb3:
-                        self.map[x][y] = Tile(x, y, 3)
+                if random.randint(1, 100) <= prb3:
+                    self.map[x][y] = Tile(x, y, 3)
+#         # Pass 2: Assign 5s
+#         for x in range(self.dimX):
+#             for y in range(self.dimY):
+#                 if self.map[x][y] is None:
+#                     if 6 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb5:
+#                         self.map[x][y] = Tile(x, y, 5)
+#         # pass 3: Assign 4s
+#         for x in range(self.dimX):
+#             for y in range(self.dimY):
+#                 if self.map[x][y] is None:
+#                     if 5 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb4:
+#                         self.map[x][y] = Tile(x, y, 4)
+#         # pass 4: Assign 3s
+#         for x in range(self.dimX):
+#             for y in range(self.dimY):
+#                 if self.map[x][y] is None:
+#                     if 4 in self.GST.get(x,y,self.map,attr='value') and random.randint(1, 100) <= prb3:
+#                         self.map[x][y] = Tile(x, y, 3)
         # pass 5: Assign 2s
         for x in range(self.dimX):
             for y in range(self.dimY):

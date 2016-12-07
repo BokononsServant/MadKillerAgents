@@ -1,5 +1,4 @@
 from SurroundingTiles import get
-cnt=0
 
 class City:
     
@@ -25,11 +24,8 @@ class City:
                 print "Can't found city: Too close to another City!"
                 return
             
-   
-        global cnt
-        cnt=cnt+1
         self.owner = owner      
-        self.name = owner.name[:2]+str(cnt)       
+        self.name = owner.name[:2]+str(len(self.owner.cities))
         self.tile=Tile
         self.tile.owner=self.owner
         self.tile.city=self
