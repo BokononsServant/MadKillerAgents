@@ -1,5 +1,6 @@
 import math
 import City
+from SurroundingTiles import get
 
 class Army:
     """
@@ -12,6 +13,7 @@ class Army:
         """
 
         """
+        
         if units<=0: 
             print "Can't create army: units <= 0!"
             return
@@ -20,13 +22,16 @@ class Army:
             return
         if Tile.owner!=owner and Tile.owner!=None:
             print "Can't create army: tile belongs to another player!"
+            tkMessageBox.showinfo("Servus", "Sepp")
             return
+        self.gt=get()
         self.unit_type=unit_type
         self.units=units
         self.owner=owner
         self.tile=Tile  
         self.MP = 1
         self.MAO=MAO
+        
         
         """
         Costs of special moves
@@ -106,7 +111,7 @@ class Army:
         #print "Army destroyed on Tile %s %s" %(self.tile.x,self.tile.y)
         self.owner.armies.remove(self.tile.army)               
         self.tile.army=None
-        self.tile.owner = None
+        if self.tile.city == None: self.tile.owner = None
         self.MAO.tile_renderer(self.tile)
 
     def battle(self,destTile,units):
@@ -180,7 +185,21 @@ class Army:
         With a base cost of 5 this would be: 6 7 8 10 13 18 26 39 etc.
         """
          
-        tmp_tile=self.tile       
+        tmp_tile=self.tile
+        
+        PT = [
+         [-2,2],  [-1, 2], [0, 2], [1, 2], [2,2],
+         [-2,1],  [-1, 1], [0, 1], [1, 1], [2,1],
+         [-2,0],  [-1, 0],         [1, 0], [2,0],
+         [-2,-1], [-1, -1],[0, -1],[1, -1],[2,-1],
+         [-2,-2], [-1, -2],[0, -2],[1, -2],[2,-2]
+         ]  
+        
+        for T in self.gt.get(self.tile.x,self.tile.y,self.MAO.map1.map,PT=PT):
+            if T.city != None: 
+                print "Can'build city! Too close to another City!"
+                return
+        
         if self.tile.city == None:
             if self.units<self.cost_build_city:
                 print "Can't build city! Not enough units!"

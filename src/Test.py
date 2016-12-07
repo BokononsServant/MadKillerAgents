@@ -1,12 +1,15 @@
 import math
 import random
+import Tile
 
-def fib(n):
-    Phi=(1+math.sqrt(5))/2
-    phi=(1-math.sqrt(5))/2
-    return int((Phi**n-phi**n)/math.sqrt(5))
+a=Tile.Tile(2,2,5)
 
-for i in range(1,10):
-    print fib(i)+5
+print isinstance(a, Tile.Tile)
 
-print random.choice([True,False])
+PT = [
+     [-2,2],  [-1, 2], [0, 2], [1, 2], [2,2],
+     [-2,1],  [-1, 1], [0, 1], [1, 1], [2,1],
+     [-2,0],  [-1, 0],         [1, 0], [2,0],
+     [-2,-1], [-1, -1],[0, -1],[1, -1],[2,-1],
+     [-2,-2], [-1, -2],[0, -2],[1, -2],[2,-2]
+     ]
