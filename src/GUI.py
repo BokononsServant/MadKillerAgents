@@ -57,8 +57,8 @@ class MyApp:
         City.City(self.player3,self.map1.map[8][8],self)
 
         # start game
+        self.BeginningOfTurn(self.active_player)
         
-        self.NewTurn()
         sim=False
         if sim: self.simulation() 
         
@@ -72,8 +72,7 @@ class MyApp:
                 #self.myContainer1.after(i * 600, self.NewTurn)
                 self.NewTurn()
 
-    def NewTurn(self):
-        self.BeginningOfTurn(self.active_player)
+    def NewTurn(self):        
         try:            
             self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
             print self.active_player.name
@@ -81,10 +80,8 @@ class MyApp:
             self.active_player=self.AllPlayers[0]
             print self.active_player.name
             
-        
+        self.BeginningOfTurn(self.active_player)    
 
-            
-        
         return
         # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
 #         LP1 = list(self.player1.armies)
