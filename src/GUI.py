@@ -23,7 +23,14 @@ class MyApp:
             self.myContainer1, command=self.button1Click)  # (1)
         self.button1.configure(text="NewTurn", background="green")
         self.button1.pack(side=LEFT)
+        
+        self.button2 = Button(
+            self.myContainer1, command=self.button2Click)  # (1)
+        self.button2.configure(text="Build City", background="green")
+        self.button2.pack(side=LEFT)
+        
         self.button1.focus_force()
+        
         
         # dimensions of the map
         self.dimX = 10
@@ -72,7 +79,9 @@ class MyApp:
                 #self.myContainer1.after(i * 600, self.NewTurn)
                 self.NewTurn()
 
-    def NewTurn(self):        
+    def NewTurn(self):
+        
+        TileSelection.prev_selection=None     
         try:            
             self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
             print self.active_player.name
@@ -124,10 +133,11 @@ class MyApp:
             producedArmies=0
             try:                
                 for i in range(cty.pop):
-                    producedArmies=producedArmies+sorted(gt.get(cty.tile.x,cty.tile.y,self.map1.map,attr='value'),reverse=True)[i]+cty.tile.value
+                    producedArmies=producedArmies+sorted(gt.get(cty.tile.x,cty.tile.y,self.map1.map,attr='value'),reverse=True)[i]
             except:
-                pass    
-         
+                pass  
+              
+            producedArmies=producedArmies+cty.tile.value
             Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
             print "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name)
 
@@ -186,6 +196,11 @@ class MyApp:
         
     def button1Click(self):  # (3)
         self.NewTurn()
+    def button2Click(self):
+        try:
+            TileSelection.prev_selection.army.build_city()
+        except:
+            print "Couldn't build city!"
 
     def call_tile_selection(self,event):
         TileSelection.TileSelection(event.widget,self)
