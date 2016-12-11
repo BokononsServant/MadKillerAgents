@@ -84,7 +84,7 @@ class MyApp:
         TileSelection.prev_selection=None     
         try:            
             self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
-            print self.active_player.name
+            print "%ss turn begins!"%(self.active_player.name)
         except:                      
             self.active_player=self.AllPlayers[0]
             print self.active_player.name
@@ -92,6 +92,7 @@ class MyApp:
         self.BeginningOfTurn(self.active_player)    
 
         return
+    
         # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
 #         LP1 = list(self.player1.armies)
 #         LP2 = list(self.player2.armies)

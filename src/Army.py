@@ -70,7 +70,7 @@ class Army:
             print "Can't move army: units to be moved <= 0."
             return
         
-        if destTile.value==6: 
+        if destTile.value==3: 
             print "Can't move army: Impassable Terrain!"
             return
         
