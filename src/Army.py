@@ -3,6 +3,7 @@ import City
 from SurroundingTiles import get
 import tkMessageBox
 
+
 class Army:
     """
     Armies 'live' in two places:
@@ -37,9 +38,12 @@ class Army:
         """
         Costs of special moves
         """
-        
-        self.cost_build_city=20
-        self.cost_grow_city=5
+        global cost_build_city
+        global cost_grow_city
+        global cost_grow_city_modifier
+        cost_build_city=20
+        self.cost_grow_city_modifier=8
+        cost_grow_city={i:int(round(self.fib(i)*1.5+self.cost_grow_city_modifier)) for i in range(20)}
 
         self.create()  
             
@@ -66,8 +70,12 @@ class Army:
         #self.tile will later be the same as desTile, so to preserve self.Tile for rendering make temporary copy
         tmp_Tile=self.tile
         
+        if self.MP <1:
+            print "Can't move: not enough movement points left!"
+            return
+        
         if units<=0:
-            print "Can't move army: units to be moved <= 0."
+            print "Can't move army: units to be moved <= 0!"
             return
         
         if destTile.value==3: 
@@ -83,12 +91,14 @@ class Army:
         
         if destTile.owner!= self.owner and destTile.owner!=None:
             self.battle(destTile,units)
+            self.MP = self.MP -1
             return     
          
         else:
             try:
                 #if there is already an own army on the destination Tile, units are transferred. If all units are transferred the original army will later be destroyed
                 destTile.army.units=destTile.army.units+units 
+                destTile.army.MP=destTile.army.MP-1
                 self.units=self.units-units
             except:
                 if newArmy==False:
@@ -100,6 +110,8 @@ class Army:
                 if newArmy==True:
                     Army(Tile=destTile,owner=self.owner,MAO=self.MAO,units=units)
                     self.units=self.units-units              
+        
+        self.MP = self.MP -1
                  
         if self.units<=0:
             self.destroy()
@@ -180,6 +192,9 @@ class Army:
         
     def build_city(self):
         
+        if self.MP<1:
+            print "Can't build city! Not enough movement points!"
+            return
         """
         The cost for growing citys is dependent on the Fibonacci numbers:
         base_cost+fib(n) where n is city population.
@@ -202,18 +217,19 @@ class Army:
                 return
         
         if self.tile.city == None:
-            if self.units<self.cost_build_city:
+            if self.units<cost_build_city:
                 print "Can't build city! Not enough units!"
                 return
             else:             
                 City.City(self.owner,self.tile,self.MAO)
-                self.units=self.units-self.cost_build_city    
+                self.units=self.units-cost_build_city    
                 print "City %s built on tile %s %s!"%(self.tile.city.name,self.tile.x, self.tile.y)        
 
-        elif self.units > self.fib(self.tile.city.pop)+5:
-            print "%s grows from size %s to %s!"%(self.tile.city.name,self.tile.city.pop,self.tile.city.pop+1)
+        elif self.units > cost_grow_city[self.tile.city.pop]:
+            print "%s grows from size %s to %s for %s units!"%(self.tile.city.name,self.tile.city.pop,self.tile.city.pop+1,cost_grow_city[self.tile.city.pop])
             self.tile.city.pop=self.tile.city.pop+1
-            self.units=self.units-(self.fib(self.tile.city.pop)+5)
+            self.units=self.units-cost_grow_city[self.tile.city.pop]
+        
         
         if self.units<=0: self.destroy()
         
