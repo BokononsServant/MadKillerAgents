@@ -1,3 +1,4 @@
+from Tkinter import PhotoImage
 prev_selection= None
 
 class TileSelection():
@@ -13,6 +14,8 @@ class TileSelection():
         global prev_selection
         
         if prev_selection == Tile:
+#             "Have to secify a new Photoimage, don't know why"
+#             prev_selection.label.configure(relief='solid',image=PhotoImage())
             prev_selection = None
             self.MAO.printl("Nothing selected!")
         
@@ -21,6 +24,7 @@ class TileSelection():
             self.MAO.slider.configure(state='normal',from_ =0,to=Tile.army.units)
             self.MAO.slider.set(Tile.army.units)
             self.MAO.printl( "Tile %s %s selected!"%(Tile.x, Tile.y))
+#             Tile.label.configure(relief='sunken',image=PhotoImage())
 
         elif prev_selection != None and prev_selection.army != None and prev_selection.owner == self.MAO.active_player:
             

@@ -1,7 +1,6 @@
 import math
 import City
 from SurroundingTiles import get
-import tkMessageBox
 
 
 class Army:
@@ -50,8 +49,8 @@ class Army:
         
     def create(self):        
         """
-        If army already exists on Tile, just add units to it
-        If Tile is empty create a new army and change self.tile.army, self.owner.armies, self.tile.owner accordingly        
+        If army already exists on Tile, just adds units to it
+        If Tile is empty, creates a new army and changes self.tile.army, self.owner.armies, self.tile.owner accordingly        
         """       
         try:
             self.tile.army.units=self.tile.army.units+self.units           
@@ -146,8 +145,8 @@ class Army:
 
         attackerUnits = units
         defenderUnits = destTile.army.units
-        attacker = self.owner.color
-        defender = destTile.owner.color
+        attacker = self.owner.name
+        defender = destTile.owner.name
         
         defenderArmor = destTile.value
                
@@ -187,6 +186,7 @@ class Army:
                 self.move(destTile,attackerUnits-(defenderUnits+defenderArmor))
         else:
             self.MAO.printl( "Impasse! %s has %s units left, %s has %s units left!"%(attacker,self.units,defender,destTile.army.units))
+            self.MP=self.MP+1
         
         self.MAO.tile_renderer(tmp_tile)
         self.MAO.tile_renderer(tmp_destTile)

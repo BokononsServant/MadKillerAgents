@@ -12,16 +12,23 @@ class MyApp:
 
     def __init__(self, parent):
 
-        # initialize GUI
         self.myParent = parent
+        
+        #Game setup
+        
+        #self.Starting
+        
+
+        # initialize GUI
+        
         self.myContainer1 = Frame(parent)
         self.myContainer1.pack()
         self.myContainer2 = Frame(self.myContainer1)
         self.myContainer2.pack()
-  
+
         self.button1 = Button(
             self.myContainer1, command=self.button1Click)  # (1)
-        self.button1.configure(text="NewTurn", background="green")
+        self.button1.configure(text="Next Turn", background="green")
         self.button1.pack(side=LEFT)
          
         self.button2 = Button(
@@ -36,11 +43,7 @@ class MyApp:
         
         self.slider=Scale(self.myContainer1, from_=0, to=100,orient=HORIZONTAL,state='disabled')
         self.slider.pack(side=LEFT)
-               
-        self.game_log=Toplevel()
-        self.msg=Label(self.game_log)
 
-        
         self.button1.focus_force()
 
         # dimensions of the map
@@ -53,10 +56,11 @@ class MyApp:
         #draw Map
         for x in range(self.dimX):
             for y in range(self.dimY):
-                self.tile_renderer(self.map1.map[x][y])          
-                
+                self.tile_renderer(self.map1.map[x][y])    
+
         # initialize Turn Timer
         self.turnTimer = 0
+        self.round = 1
 
         # initialize Players
         self.SetUpPlayers()      
@@ -70,21 +74,21 @@ class MyApp:
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 
         # generate starting cities
-# City.City(self.player1,self.map1.map[1][1],self)
-# City.City(self.player2,self.map1.map[4][4],self)
-# City.City(self.player3,self.map1.map[8][8],self)
+        # City.City(self.player1,self.map1.map[1][1],self)
+        # City.City(self.player2,self.map1.map[4][4],self)
+        # City.City(self.player3,self.map1.map[8][8],self)
 
         # start game
-
+        
+        self.printl("The game begins!")
+        self.printl (("Round %s started!")%(self.round))
+        self.printl( "%ss turn begins!"%(self.active_player.name))
+        
         self.BeginningOfTurn(self.active_player)
         
         sim=False
         if sim: self.simulation() 
-        
-        for x in range(self.dimX):
-            for y in range(self.dimY):
-                self.tile_renderer(self.map1.map[x][y],simulation=False)   
-            
+     
     def simulation(self):
             for i in range(50):
             #Dont use NewTurn with brackets!
@@ -92,8 +96,14 @@ class MyApp:
                 self.NewTurn()
 
     def NewTurn(self):
+        self.turnTimer=self.turnTimer+1
+        if self.turnTimer%len(self.AllPlayers)==0:
+            self.round=self.round+1
+            self.printl (("Round %s started!")%(self.round))
+            
         
-        TileSelection.prev_selection=None     
+        TileSelection.prev_selection=None  
+           
         try:            
             self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
             self.printl( "%ss turn begins!"%(self.active_player.name))
@@ -152,6 +162,11 @@ class MyApp:
             producedArmies=producedArmies+cty.tile.value
             Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
             self.printl( "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name))
+            
+        """
+        Reset Movement points
+        """
+        
         for arms in plyr.armies:
             arms.MP=1
 
@@ -167,7 +182,7 @@ class MyApp:
         
         self.active_player=self.player1
     
-    def tile_renderer(self, Tile, simulation=False):
+    def tile_renderer(self, Tile, simulation=False,relief='solid'):
         
         if Tile == None or simulation==True:return
         
@@ -176,7 +191,7 @@ class MyApp:
         self.TileWidth = 50
         self.TileHeight = 50
         
-        Tile.label=Label(self.myContainer2, relief='solid', image=self.p, height=self.TileHeight,
+        Tile.label=Label(self.myContainer2, relief=relief, image=self.p, height=self.TileHeight,
                                                compound='left', width=self.TileWidth)
         
         Tile.label.configure(text="TV: " + str(Tile.value), anchor=N)
@@ -212,7 +227,7 @@ class MyApp:
         self.NewTurn()
     
     def button3Click(self):
-        InfoText="""\nLeft-click selects or deselects an army.
+        InfoText="""Left-click selects or deselects an army.
                     Left-click to move a selected army.
                     Build city creates a new city (costs %s units) or increases population.
                     Population costs are:
@@ -247,13 +262,34 @@ class MyApp:
         
     def printl(self,txt):
         try:
-            self.msg.configure(text=self.msg.cget('text')+str(txt)+"\n",anchor='w')
-            self.msg.pack()
+            self.listbox.insert(0,txt)
         except:
             self.game_log=Toplevel()
-            self.msg=Label(self.game_log)
+            self.game_log.title("Game Log")
             
-        
+            self.scrollbar1 = Scrollbar(self.game_log)
+            self.scrollbar1.pack(side=RIGHT, fill=Y)
+            
+            self.scrollbar2 = Scrollbar(self.game_log,orient=HORIZONTAL)
+            self.scrollbar2.pack(side=BOTTOM, fill=X)
+            
+            
+            
+            self.listbox = Listbox(self.game_log, width=70, height=40)
+            self.listbox.pack()
+    
+            self.listbox.insert(0, txt)
+            # attach listbox to scrollbar
+            self.listbox.config(yscrollcommand=self.scrollbar1.set)
+            self.scrollbar1.config(command=self.listbox.yview)
+            
+            self.listbox.config(xscrollcommand=self.scrollbar2.set)
+            self.scrollbar2.config(command=self.listbox.xview)
+    def test(self,Tile):
+        print Tile.label.cget('text')
+        Tile.label.configure(text="234")
+        print Tile.label.cget('text')
+
 if __name__ == "__main__":
     root = Tk()
     myapp = MyApp(root)
