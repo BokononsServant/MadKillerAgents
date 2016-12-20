@@ -3,6 +3,7 @@ from SurroundingTiles import get
 class City:
     
     def __init__(self,owner,Tile,MAO):
+        self.MAO=MAO
         gt=get()
         PT = [
          [-2,2],  [-1, 2], [0, 2], [1, 2], [2,2],
@@ -13,15 +14,15 @@ class City:
          ]
         
         if Tile.city != None:
-            print "Can't found city: City already present!"
+            self.MAO.printl( "Can't found city: City already present!")
             return
         if Tile.owner!=owner and Tile.owner !=None:
-            print "Can't found city: Tile belongs to another player!"
+            self.MAO.printl( "Can't found city: Tile belongs to another player!")
             return
         
-        for T in gt.get(Tile.x,Tile.y,MAO.map1.map,PT=PT):
+        for T in gt.get(Tile.x,Tile.y,self.MAO.map1.map,PT=PT):
             if T.city != None: 
-                print "Can't found city: Too close to another City!"
+                self.MAO.printl( "Can't found city: Too close to another City!")
                 return
             
         self.owner = owner      
@@ -31,9 +32,8 @@ class City:
         self.tile.city=self
         self.owner.cities.append(self)
         self.pop=1        
-        self.first_ring=gt.get(self.tile.x,self.tile.y,MAO.map1.map)
-        self.MAO=MAO
-        MAO.tile_renderer(self.tile)
+        self.first_ring=gt.get(self.tile.x,self.tile.y,self.MAO.map1.map)
+        self.MAO.tile_renderer(self.tile)
     
     def destroy(self):
         tmp_tile=self.tile

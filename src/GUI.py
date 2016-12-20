@@ -33,10 +33,16 @@ class MyApp:
             self.myContainer1, command=self.button3Click)  # (1)
         self.button3.configure(text="Help", background="green")
         self.button3.pack(side=RIGHT)
+        
+        self.slider=Scale(self.myContainer1, from_=0, to=100,orient=HORIZONTAL,state='disabled')
+        self.slider.pack(side=LEFT)
+               
+        self.game_log=Toplevel()
+        self.msg=Label(self.game_log)
 
+        
         self.button1.focus_force()
-        
-        
+
         # dimensions of the map
         self.dimX = 10
         self.dimY = 10
@@ -69,6 +75,7 @@ class MyApp:
 # City.City(self.player3,self.map1.map[8][8],self)
 
         # start game
+
         self.BeginningOfTurn(self.active_player)
         
         sim=False
@@ -89,10 +96,10 @@ class MyApp:
         TileSelection.prev_selection=None     
         try:            
             self.active_player=self.AllPlayers[self.AllPlayers.index(self.active_player)+1]
-            print "%ss turn begins!"%(self.active_player.name)
+            self.printl( "%ss turn begins!"%(self.active_player.name))
         except:                      
             self.active_player=self.AllPlayers[0]
-            print "%ss turn begins!"%(self.active_player.name)
+            self.printl( "%ss turn begins!"%(self.active_player.name))
             
         self.BeginningOfTurn(self.active_player)    
 
@@ -112,8 +119,7 @@ class MyApp:
               
         for P in self.AllPlayers:
             self.BeginningOfTurn(P)
-            LP= list(P.armies)
-            #print P.name+" : "+str(LP)         
+            LP= list(P.armies)      
             for A in LP:
                 randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
                 if random.choice([True,False]):
@@ -128,7 +134,7 @@ class MyApp:
         
         
         # advance turn timer
-        print "Turn " + str(self.turnTimer) + " done"
+        self.printl( "Turn " + str(self.turnTimer) + " done")
         self.turnTimer = self.turnTimer + 1
 
         
@@ -145,7 +151,7 @@ class MyApp:
               
             producedArmies=producedArmies+cty.tile.value
             Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
-            print "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name)
+            self.printl( "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name))
         for arms in plyr.armies:
             arms.MP=1
 
@@ -206,20 +212,20 @@ class MyApp:
         self.NewTurn()
     
     def button3Click(self):
-        InfoText="""\nLeft-click selects or deselects an army.\n
-                    Left-click to move a selected army.\n
-                    Build city creates a new city (costs %s units) or increases population.\n
-                    Population costs are:\n
-                    1->2: %s units \n
-                    2->3: %s units \n
-                    3->4: %s units \n
-                    4->5: %s units \n
-                    5->6: %s units \n
-                    6->7: %s units \n
-                    7->8: %s units \n
-                    8->9: %s units \n
-                    9->10: %s units \n
-                    10->11: %s units \n
+        InfoText="""\nLeft-click selects or deselects an army.
+                    Left-click to move a selected army.
+                    Build city creates a new city (costs %s units) or increases population.
+                    Population costs are:
+                    1->2: %s units 
+                    2->3: %s units 
+                    3->4: %s units 
+                    4->5: %s units 
+                    5->6: %s units 
+                    6->7: %s units 
+                    7->8: %s units
+                    8->9: %s units
+                    9->10: %s units
+                    10->11: %s units
                     """%(Army.cost_build_city, Army.cost_grow_city[1],Army.cost_grow_city[2],Army.cost_grow_city[3],Army.cost_grow_city[4]
                          ,Army.cost_grow_city[5],Army.cost_grow_city[6],Army.cost_grow_city[7],Army.cost_grow_city[8],Army.cost_grow_city[9]
                          ,Army.cost_grow_city[10])
@@ -234,10 +240,19 @@ class MyApp:
         try:
             TileSelection.prev_selection.army.build_city()
         except:
-            print "Couldn't build city! No army selected!"
+            self.printl( "Couldn't build city! No army selected!")
 
     def call_tile_selection(self,event):
         TileSelection.TileSelection(event.widget,self)
+        
+    def printl(self,txt):
+        try:
+            self.msg.configure(text=self.msg.cget('text')+str(txt)+"\n",anchor='w')
+            self.msg.pack()
+        except:
+            self.game_log=Toplevel()
+            self.msg=Label(self.game_log)
+            
         
 if __name__ == "__main__":
     root = Tk()
