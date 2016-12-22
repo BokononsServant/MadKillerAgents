@@ -6,3 +6,4 @@ class NewPlayer:
         self.color = color
         self.armies = []
         self.cities = []
+        self.AI=None

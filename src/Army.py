@@ -35,13 +35,14 @@ class Army:
         
         """
         Costs of special moves
+        Declare as global variables to access via in-game help
         """
         global cost_build_city
         global cost_grow_city
         global cost_grow_city_modifier
         cost_build_city=20
         self.cost_grow_city_modifier=8
-        cost_grow_city={i:int(round(self.fib(i)*1.5+self.cost_grow_city_modifier)) for i in range(20)}
+        cost_grow_city={i:int(round(self.fib(i)*2+self.cost_grow_city_modifier)) for i in range(20)}
 
         self.create()  
             

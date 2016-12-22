@@ -7,6 +7,7 @@ import Map
 import Army
 import tkMessageBox
 import TileSelection
+from VictoryConditions import check
 
 class MyApp:
 
@@ -67,8 +68,8 @@ class MyApp:
 
         # generate starting units
         Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=20,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=1,MAO=self,ignore6=True)
+#        Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=1,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
@@ -98,10 +99,16 @@ class MyApp:
     def NewTurn(self):
         self.turnTimer=self.turnTimer+1
         if self.turnTimer%len(self.AllPlayers)==0:
+            """
+            Checks for victory conditions etc.
+            """
+            if check(self)=="Game over!":
+                tkMessageBox.showwarning("Game over!")
+                return
+            
             self.round=self.round+1
             self.printl (("Round %s started!")%(self.round))
-            
-        
+               
         TileSelection.prev_selection=None  
            
         try:            
@@ -141,14 +148,7 @@ class MyApp:
         for x in range(self.dimX):
             for y in range(self.dimY):
                 self.tile_renderer(self.map1.map[x][y])    
-        
-        
-        # advance turn timer
-        self.printl( "Turn " + str(self.turnTimer) + " done")
-        self.turnTimer = self.turnTimer + 1
-
-        
-        
+          
     def BeginningOfTurn(self,plyr):        
         gt=SurroundingTiles.get()
         for cty in plyr.cities:
@@ -177,8 +177,8 @@ class MyApp:
         self.AllPlayers.append(self.player1)
         self.player2 = Player.NewPlayer(name="Jaap", color="yellow")
         self.AllPlayers.append(self.player2)
-        self.player3 = Player.NewPlayer(name="Barbarian", color="red")
-        self.AllPlayers.append(self.player3)
+#        self.player3 = Player.NewPlayer(name="Barbarian", color="red")
+#        self.AllPlayers.append(self.player3)
         
         self.active_player=self.player1
     
