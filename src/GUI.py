@@ -9,6 +9,7 @@ import tkMessageBox
 import TileSelection
 from VictoryConditions import check
 
+
 class MyApp:
 
     def __init__(self, parent):
@@ -163,19 +164,23 @@ class MyApp:
             Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
             self.printl( "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name))
             
+        
+            
         """
         Reset Movement points
         """
         
         for arms in plyr.armies:
             arms.MP=1
-
+            
+        plyr.AI.play_turn()
+            
     def SetUpPlayers(self):
 
         self.AllPlayers = []
-        self.player1 = Player.NewPlayer(name="Gabriel", color="blue")
+        self.player1 = Player.NewPlayer(name="Gabriel", color="blue", MAO=self,AI_type='human')
         self.AllPlayers.append(self.player1)
-        self.player2 = Player.NewPlayer(name="Jaap", color="yellow")
+        self.player2 = Player.NewPlayer(name="Jaap", color="yellow", MAO=self,AI_type='random')
         self.AllPlayers.append(self.player2)
 #        self.player3 = Player.NewPlayer(name="Barbarian", color="red")
 #        self.AllPlayers.append(self.player3)
