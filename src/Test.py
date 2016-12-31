@@ -1,8 +1,9 @@
 import operator
 from operator import itemgetter
 
-list=[]
+list=[[1,2],[3,4]]
 
-list=[['a','b'],[1,2]]
 
-print list[1][0]
+list[0].remove(2)
+
+list[0].remove(1)
