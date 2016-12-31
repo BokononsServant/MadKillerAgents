@@ -69,7 +69,7 @@ class MyApp:
 
         # generate starting units
         Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=1,MAO=self,ignore6=True)
+        Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
 #        Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=1,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
 #         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)

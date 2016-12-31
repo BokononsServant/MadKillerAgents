@@ -3,8 +3,6 @@ from operator import itemgetter
 
 list=[]
 
-list.append([20,'Jaap'])
-list.append([10,'Gabriel'])
-list.append([30,'Barabrian'])
+list=[['a','b'],[1,2]]
 
-print sorted(list,reverse=True)
+print list[1][0]
