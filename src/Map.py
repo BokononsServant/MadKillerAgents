@@ -24,7 +24,7 @@ class Map:
         prb6 = 10  # chance in % for 6
         prb5 = 80
         prb4 = 40
-        prb3 = 10
+        prb3 = 15
         prb2 = 70
         # Pass 1: Assign 6s
         for x in range(self.dimX):

@@ -14,7 +14,7 @@ class TileSelection():
         global prev_selection
         
         if prev_selection == Tile:
-#             "Have to secify a new Photoimage, don't know why"
+#             "Have to specify a new Photoimage, don't know why"
 #             prev_selection.label.configure(relief='solid',image=PhotoImage())
             prev_selection = None
             self.MAO.printl("Nothing selected!")

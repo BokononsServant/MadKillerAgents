@@ -70,19 +70,7 @@ class MyApp:
 
         # generate starting units
         place_players(self, 20)
-        #return
-        #Army.Army(Tile=self.map1.map[1][1],owner=self.player1,units=20,MAO=self,ignore6=True)
-        #Army.Army(Tile=self.map1.map[4][4],owner=self.player2,units=20,MAO=self,ignore6=True)
-#        Army.Army(Tile=self.map1.map[8][8],owner=self.player3,units=1,MAO=self,ignore6=True)
-#         Army.Army(Tile=self.map1.map[6][6],owner=self.player2,units=20,MAO=self,ignore6=True)
-#         Army.Army(Tile=self.map1.map[9][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-#         Army.Army(Tile=self.map1.map[0][9],owner=self.player3,units=20,MAO=self,ignore6=True)
-
-        # generate starting cities
-        # City.City(self.player1,self.map1.map[1][1],self)
-        # City.City(self.player2,self.map1.map[4][4],self)
-        # City.City(self.player3,self.map1.map[8][8],self)
-
+        
         # start game
         
         self.printl("The game begins!")
@@ -124,35 +112,6 @@ class MyApp:
             
         self.BeginningOfTurn(self.active_player)    
 
-        return
-    
-        # make copy of List bc. otherwise the list would be updated when it is modified by move etc.
-#         LP1 = list(self.player1.armies)
-#         LP2 = list(self.player2.armies)
-#         LP3 = list(self.player3.armies)
-
-        # Random move
-        PT=[        [0, 1],
-            [-1, 0],        [1, 0],
-                    [0, -1]]
-        
-        gt=SurroundingTiles.get()
-              
-        for P in self.AllPlayers:
-            self.BeginningOfTurn(P)
-            LP= list(P.armies)      
-            for A in LP:
-                randomTile=random.choice(gt.get(A.tile.x,A.tile.y,self.map1.map,PT=PT))
-                if random.choice([True,False]):
-                    A.build_city()
-                else:
-                    A.move(randomTile)
-        
-        # redraw entire map
-        for x in range(self.dimX):
-            for y in range(self.dimY):
-                self.tile_renderer(self.map1.map[x][y])    
-          
     def BeginningOfTurn(self,plyr):        
         gt=SurroundingTiles.get()
         for cty in plyr.cities:
@@ -166,9 +125,7 @@ class MyApp:
             producedArmies=producedArmies+cty.tile.value
             Army.Army(cty.tile,plyr,self,producedArmies,ignore6=True)
             self.printl( "%s armies produce in %s for %s!"%(producedArmies,cty.name,plyr.name))
-            
-        
-            
+                
         """
         Reset Movement points
         """
@@ -185,8 +142,8 @@ class MyApp:
         self.AllPlayers.append(self.player1)
         self.player2 = Player.NewPlayer(name="Jaap", color="yellow", MAO=self,AI_type='random')
         self.AllPlayers.append(self.player2)
-#        self.player3 = Player.NewPlayer(name="Barbarian", color="red")
-#        self.AllPlayers.append(self.player3)
+        self.player3 = Player.NewPlayer(name="Barbarian", color="red",MAO=self,AI_type='random')
+        self.AllPlayers.append(self.player3)
         
         self.active_player=self.player1
     

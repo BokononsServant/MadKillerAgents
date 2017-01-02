@@ -9,5 +9,6 @@ class Tile:
         self.label = None
         self.army = None
         self.city = None
+        self.setup = 'free'
 
 
